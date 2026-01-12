@@ -57,10 +57,10 @@ python run_simshadow.py
 
 This will:
 
-- Generate 9 test quantum states
-- Execute 810 measurements (9 states × 15 observables × 3 noise types × 2 platforms)
-- Perform 10000 shots per configuration
-- Generate fingerprint matrices for Qiskit and Cirq
+- Generate **9** test quantum states
+- Utilise **15** observables
+- Perform **10000** shots per configuration
+- Generate fingerprint matrices for **2** platforms: Qiskit and Cirq
 - Compute cross-platform Frobenius distances between fingerprints
 - Run physics-informed noise channel classification and parameter estimation
 - Save timestamped results to `results/simshadow_results_*.json` and detailed logs to `logs/`
