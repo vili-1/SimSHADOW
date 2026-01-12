@@ -9,13 +9,29 @@ This repository is the artifact for the paper *Toward Live Noise Fingerprinting 
 
 ### Quick Start (local execution)
 
-**1. Navigate to the artifact directory**
+**1. Requirments**
+
+```
+sudo apt-get install python3-pip
+python3 -m pip --version
+python3 -m pip install "qiskit~=2.2" "qiskit-aer~=0.17" "qiskit-nature~=0.7" scipy
+pip install openfermion
+pip install --upgrade cirq
+pip install --quiet ply
+pip install qiskit_qasm3_import
+pip install qiskit
+
+# Test all ok
+python -c "import qiskit, cirq; print('ok')"
+```
+
+**2. Navigate to the artifact directory**
 
 ```bash
 cd ~/SimSHADOW_artifact
 ```
 
-**2. Activate the experiment environment**
+**3. Activate the experiment environment**
 
 The authors used Python 3.12 in a local virtual environment named `.venv312`:
 
@@ -33,7 +49,7 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-**3. Run the complete experiment (generate fresh data)**
+**4. Run the complete experiment (generate fresh data)**
 
 ```bash
 python run_simshadow.py
@@ -43,7 +59,7 @@ This will:
 
 - Generate 9 test quantum states
 - Execute 810 measurements (9 states × 15 observables × 3 noise types × 2 platforms)
-- Perform 405,000 quantum shots total (500 shots per configuration)
+- Perform 10000 shots per configuration
 - Generate fingerprint matrices for Qiskit and Cirq
 - Compute cross-platform Frobenius distances between fingerprints
 - Run physics-informed noise channel classification and parameter estimation
@@ -131,7 +147,7 @@ Expected outputs:
 
 **Measurement Protocol:**
 
-- 500 quantum shots per measurement configuration
+- 10000 quantum shots per measurement configuration
 - Direct measurement in each observable's eigenbasis (no full classical shadow reconstruction)
 - Ideal expectations computed analytically (no 10k-shot noiseless runs)
 
