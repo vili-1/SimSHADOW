@@ -1,0 +1,282 @@
+"""
+Cirq platform implementation for SimSHADOW quantum simulator validation.
+
+Provides Cirq-specific quantum circuit execution and noise model integration.
+"""
+
+import numpy as np
+import cirq
+from typing import List, Dict, Optional, Tuple
+from cirq import Simulator, DensityMatrixSimulator
+from cirq.circuits import InsertStrategy
+
+from ..core.shadow_tomography import QuantumState, PauliObservable
+from ..core.noise_models import NoiseChannel, DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
+
+
+class CirqPlatform:
+    """
+    Cirq simulator platform for SimSHADOW experiments.
+    
+    Handles circuit construction, noise model configuration, and measurement execution
+    specifically for Cirq-based simulations.
+    """
+    
+    def __init__(self, n_qubits: int = 2):
+        self.platform_name = "Cirq"
+        self.n_qubits = n_qubits
+        self.qubits = cirq.LineQubit.range(n_qubits)
+        self.simulator = DensityMatrixSimulator()  # Use density matrix for noise
+        self.noise_config: Optional[Dict] = None
+        self.current_noise_channel: Optional[NoiseChannel] = None
+        
+    def configure_noise(self, noise_channel: NoiseChannel):
+        """Configure Cirq noise model based on SimSHADOW noise channel."""
+        self.current_noise_channel = noise_channel
+        self.noise_config = {
+            'type': noise_channel.name,
+            'parameter': noise_channel.parameter
+        }
+    
+    def _add_noise_to_circuit(self, circuit: cirq.Circuit) -> cirq.Circuit:
+        """Add noise to circuit based on current noise configuration."""
+        if self.current_noise_channel is None:
+            return circuit
+        
+        noisy_circuit = cirq.Circuit()
+        
+        for moment in circuit:
+            # Add the original operations
+            noisy_circuit.append(moment, strategy=InsertStrategy.NEW_THEN_INLINE)
+            
+            # Add noise after each gate
+            for operation in moment:
+                if isinstance(self.current_noise_channel, DepolarizingChannel):
+                    # Add depolarizing noise to each qubit involved
+                    for qubit in operation.qubits:
+                        noise_op = cirq.depolarize(p=self.current_noise_channel.p).on(qubit)
+                        noisy_circuit.append(noise_op, strategy=InsertStrategy.INLINE)
+                        
+                elif isinstance(self.current_noise_channel, AmplitudeDampingChannel):
+                    # Add amplitude damping noise
+                    for qubit in operation.qubits:
+                        noise_op = cirq.amplitude_damp(gamma=self.current_noise_channel.gamma).on(qubit)
+                        noisy_circuit.append(noise_op, strategy=InsertStrategy.INLINE)
+                        
+                elif isinstance(self.current_noise_channel, PhaseDampingChannel):
+                    # Add phase damping noise
+                    for qubit in operation.qubits:
+                        noise_op = cirq.phase_damp(gamma=self.current_noise_channel.lambda_param).on(qubit)
+                        noisy_circuit.append(noise_op, strategy=InsertStrategy.INLINE)
+        
+        return noisy_circuit
+    
+    def prepare_state_circuit(self, quantum_state: QuantumState) -> cirq.Circuit:
+        """Create Cirq circuit to prepare the specified quantum state."""
+        circuit = cirq.Circuit()
+        
+        # Initialize circuit to prepare the target state
+        if quantum_state.name.startswith("|0") or quantum_state.name.startswith("|1"):
+            # Computational basis states
+            bitstring = quantum_state.name[1:-1]  # Remove |⟩
+            for i, bit in enumerate(bitstring):
+                if bit == '1':
+                    circuit.append(cirq.X(self.qubits[i]))
+                    
+        elif "+" in quantum_state.name or "-" in quantum_state.name:
+            # Superposition states
+            state_desc = quantum_state.name[1:-1]  # Remove |⟩
+            for i, char in enumerate(state_desc):
+                if char == '+':
+                    circuit.append(cirq.H(self.qubits[i]))
+                elif char == '-':
+                    circuit.append([cirq.H(self.qubits[i]), cirq.Z(self.qubits[i])])
+                # '0' and '1' are handled above or left as |0⟩
+                    
+        elif "GHZ" in quantum_state.name:
+            # GHZ state preparation
+            circuit.append(cirq.H(self.qubits[0]))
+            for i in range(1, self.n_qubits):
+                circuit.append(cirq.CNOT(self.qubits[0], self.qubits[i]))
+        
+        return circuit
+    
+    def measure_pauli(self, quantum_state: QuantumState, pauli_string: str) -> str:
+        """
+        Measure quantum state in specified Pauli basis and return outcome.
+        
+        Args:
+            quantum_state: The quantum state to measure
+            pauli_string: Pauli string like 'XY', 'ZZ', etc.
+            
+        Returns:
+            Measurement outcome as bitstring
+        """
+        # Prepare initial state
+        circuit = self.prepare_state_circuit(quantum_state)
+        
+        # Add Pauli basis rotations
+        for i, pauli in enumerate(pauli_string):
+            if pauli == 'X':
+                circuit.append(cirq.ry(-np.pi/2)(self.qubits[i]))
+            elif pauli == 'Y':
+                circuit.append(cirq.rx(np.pi/2)(self.qubits[i]))
+            # Z measurement is in computational basis (no rotation needed)
+        
+        # Add noise if configured
+        if self.current_noise_channel:
+            circuit = self._add_noise_to_circuit(circuit)
+        
+        # Add measurements
+        for i in range(self.n_qubits):
+            circuit.append(cirq.measure(self.qubits[i], key=f'q{i}'))
+        
+        # Execute circuit
+        result = self.simulator.run(circuit, repetitions=1)
+        
+        # Extract measurement outcome
+        outcome_bits = []
+        for i in range(self.n_qubits):
+            outcome_bits.append(str(result.measurements[f'q{i}'][0][0]))
+        
+        return ''.join(outcome_bits)
+    
+    def compute_expectation_value(self, 
+                                quantum_state: QuantumState, 
+                                observable: PauliObservable,
+                                shots: int = 1000) -> float:
+        """
+        Compute expectation value of Pauli observable with proper noise simulation.
+        
+        Args:
+            quantum_state: The quantum state
+            observable: Pauli observable to measure
+            shots: Number of measurement shots
+            
+        Returns:
+            Estimated expectation value
+        """
+        # Prepare state circuit
+        circuit = self.prepare_state_circuit(quantum_state)
+        
+        # Add Pauli basis rotations for measurement
+        for i, pauli in enumerate(observable.pauli_string):
+            if pauli == 'X':
+                circuit.append(cirq.ry(-np.pi/2)(self.qubits[i]))
+            elif pauli == 'Y':
+                circuit.append(cirq.rx(np.pi/2)(self.qubits[i]))
+        
+        # Add noise if configured
+        if self.current_noise_channel:
+            circuit = self._add_noise_to_circuit(circuit)
+        
+        # Add measurements
+        for i in range(self.n_qubits):
+            circuit.append(cirq.measure(self.qubits[i], key=f'q{i}'))
+        
+        # Execute circuit with multiple shots
+        result = self.simulator.run(circuit, repetitions=shots)
+        
+        # Compute expectation value from measurement statistics
+        # For Pauli observables, eigenvalue is product of individual qubit eigenvalues
+        # After rotating to measurement basis: |0⟩ → +1, |1⟩ → -1
+        # For identity (I): eigenvalue is always +1
+        expectation = 0.0
+        
+        for shot in range(shots):
+            # Get measurement outcome for this shot
+            outcome_bits = []
+            for i in range(self.n_qubits):
+                outcome_bits.append(result.measurements[f'q{i}'][shot][0])
+            
+            # Compute eigenvalue as product of individual qubit eigenvalues
+            eigenvalue = 1.0
+            for i, pauli in enumerate(observable.pauli_string):
+                if pauli == 'I':
+                    # Identity always has eigenvalue +1
+                    continue
+                else:
+                    # After rotation to Pauli basis, |0⟩ → +1, |1⟩ → -1
+                    bit = outcome_bits[i]
+                    qubit_eigenvalue = 1.0 if bit == 0 else -1.0
+                    eigenvalue *= qubit_eigenvalue
+            
+            expectation += eigenvalue / shots
+        
+        return expectation
+    
+    def get_ideal_expectation(self, quantum_state: QuantumState, 
+                            observable: PauliObservable) -> float:
+        """Get ideal (noiseless) expectation value."""
+        # Temporarily disable noise
+        original_channel = self.current_noise_channel
+        self.current_noise_channel = None
+        
+        expectation = self.compute_expectation_value(quantum_state, observable, shots=10000)
+        
+        # Restore noise configuration
+        self.current_noise_channel = original_channel
+        
+        return expectation
+    
+    def validate_state_preparation(self, quantum_state: QuantumState) -> float:
+        """Validate that state preparation circuit produces correct state."""
+        # Create circuit without noise
+        circuit = self.prepare_state_circuit(quantum_state)
+        
+        # Get final state using noiseless simulator
+        noiseless_sim = cirq.Simulator()
+        result = noiseless_sim.simulate(circuit)
+        final_state = result.final_state_vector
+        
+        # Compute fidelity with target state
+        target_state = quantum_state.state_vector
+        fidelity = abs(np.vdot(target_state, final_state))**2
+        
+        return float(fidelity)
+    
+    def get_platform_info(self) -> Dict:
+        """Get platform-specific information for debugging."""
+        return {
+            'platform': self.platform_name,
+            'backend': 'DensityMatrixSimulator',
+            'noise_model_active': self.current_noise_channel is not None,
+            'current_noise_config': self.noise_config,
+            'n_qubits': self.n_qubits,
+            'qubits': [str(q) for q in self.qubits]
+        }
+    
+    def _create_pauli_operator(self, pauli_string: str) -> cirq.PauliString:
+        """Create Cirq PauliString from string representation."""
+        pauli_ops = []
+        pauli_map = {'I': cirq.I, 'X': cirq.X, 'Y': cirq.Y, 'Z': cirq.Z}
+        
+        for i, pauli_char in enumerate(pauli_string):
+            pauli_ops.append(pauli_map[pauli_char](self.qubits[i]))
+        
+        return cirq.PauliString(*pauli_ops)
+    
+    def compute_exact_expectation(self, quantum_state: QuantumState, 
+                                observable: PauliObservable) -> float:
+        """
+        Compute exact expectation value using Cirq's built-in tools.
+        Useful for validation and comparison with shadow tomography results.
+        """
+        # Prepare state circuit
+        circuit = self.prepare_state_circuit(quantum_state)
+        
+        # Add noise if configured
+        if self.current_noise_channel:
+            circuit = self._add_noise_to_circuit(circuit)
+        
+        # Simulate to get final density matrix
+        result = self.simulator.simulate(circuit)
+        final_density_matrix = result.final_density_matrix
+        
+        # Create Pauli operator
+        pauli_op = self._create_pauli_operator(observable.pauli_string)
+        
+        # Compute expectation value
+        expectation = cirq.expectation_from_density_matrix(pauli_op, final_density_matrix)
+        
+        return float(expectation.real) 

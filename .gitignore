@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+.venv*/
+venv*/
+env/
+ENV/
+simshadow_env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+._*
+Thumbs.db
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Logs (optional - uncomment if you don't want to track logs)
+# logs/
+
+# Results (optional - uncomment if you don't want to track large result files)
+# results/
+
+# Temporary files
+*.tmp
+*.bak
+*.log

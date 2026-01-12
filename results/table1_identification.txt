@@ -1,0 +1,27 @@
+Table 1: Noise Channel Identification Accuracy (%)
+======================================================================
+
+Noise Channel      | Theoretical | Qiskit | Cirq  | Overall
+-------------------|-------------|--------|-------|--------
+Depolarizing       |    85.0     |  0.0   |  0.0  |  0.0
+Amplitude Damping  |    80.0     | 84.0   | 83.5  | 83.8
+Phase Damping      |    65.0     | 63.3   | 62.8  | 63.1
+-------------------|-------------|--------|-------|--------
+Overall Average    |    76.7     | 49.1   | 48.8  | 49.0
+
+Cross-Platform Analysis (Real Quantum Circuits):
+- Depolarizing Distance:    7.1776
+- Amplitude Damping Distance: 6.6709
+- Phase Damping Distance:   7.3337
+
+Performance Metrics (Latest Run - 2025-12-15 18:17:50):
+- Total Measurements: 810
+- Total Quantum Shots: 405,000
+- Qiskit Execution Time: 77.0s
+- Cirq Execution Time: 1.6s
+- Performance Ratio: 49.2× (Cirq faster)
+
+All outputs saved with timestamp: 20251215_181631
+Log file: logs/simshadow_experiment_20251215_181631.log
+Results file: results/simshadow_results_20251215_181631.json
+Report file: results/simshadow_report_20251215_181631.txt

@@ -1,0 +1,8 @@
+SimSHADOW Console Output
+==================================================
+Timestamp: 2025-12-15 18:14:58
+
+This file captures the console output from the SimSHADOW experiment.
+See logs/simshadow_experiment_20251215_181345.log for detailed logging.
+See results/simshadow_report_20251215_181345.txt for comprehensive analysis.
+See results/simshadow_results_20251215_181345.json for structured data.
