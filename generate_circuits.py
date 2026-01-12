@@ -2,75 +2,66 @@
 """
 Generate three interesting quantum circuits and export them as QASM files.
 
-Circuits use gates already in use: X, H, Z, CX (CNOT)
+Constraint: avoid Hadamard; use rotations (RY/RZ), X, Z, CX.
 """
 
+import math
+import os
 from qiskit import QuantumCircuit
 from qiskit.qasm2 import dumps
-import os
+
 
 def create_circuit1_entangled_rotation():
     """
-    Circuit 1: Entangled state with rotation
-    Creates a Bell state (|Φ⁺⟩) and applies a phase rotation on one qubit.
-    This demonstrates entanglement with local phase operations.
+    Circuit 1: Entangle then add asymmetric rotations.
+    - RY(pi/2) to build superposition without H
+    - CX to entangle
+    - RZ(pi/3) on target to inject relative phase
+    - X on control to flip phase sector
     """
-    qc = QuantumCircuit(2, name='entangled_rotation')
-    
-    # Create Bell state |Φ⁺⟩ = (|00⟩ + |11⟩)/√2
-    qc.h(0)           # Hadamard on qubit 0
-    qc.cx(0, 1)       # CNOT: entangle qubits
-    
-    # Apply phase rotation (Z gate) on qubit 1
-    # This creates |Φ⁻⟩ = (|00⟩ - |11⟩)/√2
-    qc.z(1)
-    
-    return qc
+    qc = QuantumCircuit(2, name="entangled_rotation")
 
-def create_circuit2_superposition_chain():
-    """
-    Circuit 2: Superposition chain with controlled operations
-    Creates superposition on both qubits, then applies controlled operations.
-    Demonstrates superposition and controlled-phase effects.
-    """
-    qc = QuantumCircuit(2, name='superposition_chain')
-    
-    # Create superposition on both qubits
-    qc.h(0)           # |+⟩ on qubit 0
-    qc.h(1)           # |+⟩ on qubit 1
-    
-    # Apply CNOT to create entanglement
+    qc.ry(math.pi / 2, 0)
     qc.cx(0, 1)
-    
-    # Apply phase gate on qubit 1
-    qc.z(1)
-    
-    # Apply another Hadamard on qubit 1 to mix phase effects
-    qc.h(1)
-    
+    qc.rz(math.pi / 3, 1)
+    qc.x(0)
+
     return qc
 
-def create_circuit3_bell_variant():
+
+def create_circuit2_rotation_chain():
     """
-    Circuit 3: Bell state variant with additional gates
-    Creates a Bell state and applies additional operations to create
-    a more complex entangled state pattern.
+    Circuit 2: Rotation chain with interleaved CX.
+    - Local RY/RZ to set amplitudes/phases
+    - CX to spread phases
+    - Opposite-side RY to skew entanglement weight
     """
-    qc = QuantumCircuit(2, name='bell_variant')
-    
-    # Start with Bell state preparation
-    qc.h(0)           # Hadamard on qubit 0
-    qc.cx(0, 1)       # CNOT: entangle
-    
-    # Apply X gate on qubit 1 (bit flip)
+    qc = QuantumCircuit(2, name="rotation_chain")
+
+    qc.ry(math.pi / 4, 0)
+    qc.rz(math.pi / 6, 1)
+    qc.cx(0, 1)
+    qc.ry(-math.pi / 3, 1)
+    qc.cx(1, 0)
+
+    return qc
+
+
+def create_circuit3_phase_kickback():
+    """
+    Circuit 3: Phase-kickback style without H.
+    - RZ then CX to share phase
+    - Counter-phase on target
+    - X + RY to alter population and phase jointly
+    """
+    qc = QuantumCircuit(2, name="phase_kickback")
+
+    qc.rz(math.pi / 2, 0)
+    qc.cx(0, 1)
+    qc.rz(-math.pi / 2, 1)
     qc.x(1)
-    
-    # Apply Z gate on qubit 0 (phase flip)
-    qc.z(0)
-    
-    # Apply another Hadamard on qubit 0
-    qc.h(0)
-    
+    qc.ry(math.pi / 3, 0)
+
     return qc
 
 def main():
@@ -83,8 +74,8 @@ def main():
     # Define circuits
     circuits = [
         ('circuit1_entangled_rotation', create_circuit1_entangled_rotation()),
-        ('circuit2_superposition_chain', create_circuit2_superposition_chain()),
-        ('circuit3_bell_variant', create_circuit3_bell_variant())
+        ('circuit2_rotation_chain', create_circuit2_rotation_chain()),
+        ('circuit3_phase_kickback', create_circuit3_phase_kickback())
     ]
     
     print("=" * 70)
