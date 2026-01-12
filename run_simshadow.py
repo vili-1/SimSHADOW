@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-SimSHADOW: Quantum Circuit Validation with Complete Output Logging
-=======================================================================
+SimSHADOW
 
 Executes quantum circuit experiments on Qiskit and Cirq platforms
 with classical shadow tomography for cross-platform validation.
@@ -13,16 +12,15 @@ Features:
 - Complete experiment logging and output saving
 - Statistical analysis and performance benchmarking
 """
-
+import sys
 import time
 import numpy as np
+import json
 import matplotlib.pyplot as plt
-import seaborn as sns
 from pathlib import Path
+import seaborn as sns
 import pandas as pd
 from datetime import datetime
-import json
-import sys
 import logging
 
 # Ensure the package can be imported
@@ -76,55 +74,48 @@ def save_all_outputs(experiment_data, log_file, output_file, timestamp):
         f.write(f"Log File: {log_file}\n\n")
         
         f.write("EXPERIMENTAL SCALE:\n")
-        f.write(f"• Total measurements: {experiment_data['execution_stats']['total_measurements']:,}\n")
-        f.write(f"• Total quantum shots: {experiment_data['execution_stats']['total_shots']:,}\n")
-        f.write(f"• Total execution time: {experiment_data['execution_stats']['total_time']:.1f} seconds\n")
-        f.write(f"• Method: Direct measurement in each observable's basis\n")
-        f.write(f"• States tested: 9 (computational basis, superposition, GHZ)\n")
-        f.write(f"• Observables per state: 15 (Pauli operators)\n")
-        f.write(f"• Shots per measurement: 500\n")
-        f.write(f"• Noise configurations: 3 (depolarizing, amplitude damping, phase damping)\n\n")
+        f.write(f"* Total measurements: {experiment_data['execution_stats']['total_measurements']:,}\n")
+        f.write(f"* Total quantum shots: {experiment_data['execution_stats']['total_shots']:,}\n")
+        f.write(f"* Total execution time: {experiment_data['execution_stats']['total_time']:.1f} seconds\n")
+        f.write(f"* Method: Direct measurement in each observable's basis\n")
+        f.write(f"* States tested: 9 (computational basis, superposition, GHZ)\n")
+        f.write(f"* Observables per state: 15 (Pauli operators)\n")
+        f.write(f"* Shots per measurement: 10000\n")
+        f.write(f"* Noise configurations: 3 (depolarizing, amplitude damping, phase damping)\n\n")
         
         f.write("PLATFORM PERFORMANCE ANALYSIS:\n")
-        f.write(f"• Qiskit AerSimulator:\n")
+        f.write(f"* Qiskit AerSimulator:\n")
         f.write(f"  - Execution time: {experiment_data['timing']['qiskit']['total_time']:.1f} seconds\n")
         f.write(f"  - Throughput: {experiment_data['timing']['qiskit']['measurements_per_sec']:.1f} measurements/sec\n")
         f.write(f"  - Quantum shots: {experiment_data['timing']['qiskit']['shots_per_sec']:.0f} shots/sec\n")
-        f.write(f"• Cirq DensityMatrixSimulator:\n")
+        f.write(f"* Cirq DensityMatrixSimulator:\n")
         f.write(f"  - Execution time: {experiment_data['timing']['cirq']['total_time']:.1f} seconds\n")
         f.write(f"  - Throughput: {experiment_data['timing']['cirq']['measurements_per_sec']:.1f} measurements/sec\n")
         f.write(f"  - Quantum shots: {experiment_data['timing']['cirq']['shots_per_sec']:.0f} shots/sec\n")
-        f.write(f"• Performance ratio: {experiment_data['execution_stats']['performance_ratio']:.1f}× (Cirq faster)\n\n")
+        f.write(f"* Performance ratio: {experiment_data['execution_stats']['performance_ratio']:.1f}× (Cirq faster)\n\n")
         
         f.write("CROSS-PLATFORM VALIDATION RESULTS:\n")
         for noise_type, distance in experiment_data['cross_platform_distances'].items():
-            f.write(f"• {noise_type.replace('_', ' ').title()}: Distance = {distance:.4f}\n")
+            f.write(f"* {noise_type.replace('_', ' ').title()}: Distance = {distance:.4f}\n")
         f.write("\n")
         
         f.write("NOISE IDENTIFICATION ACCURACY:\n")
         for platform, results in experiment_data['identification_results'].items():
             if platform != 'combined':
-                f.write(f"• {platform.upper()}:\n")
+                f.write(f"* {platform.upper()}:\n")
                 for noise_type, accuracy in results.items():
                     if noise_type != 'overall':
                         f.write(f"  - {noise_type.replace('_', ' ').title()}: {accuracy:.1f}%\n")
                 f.write(f"  - Overall: {results['overall']:.1f}%\n")
         f.write("\n")
-        
-        f.write("SCIENTIFIC INSIGHTS:\n")
-        f.write("• Both platforms implement valid but systematically different noise realizations\n")
-        f.write("• Amplitude damping shows highest cross-platform variation (implementation ambiguities)\n")
-        f.write("• Phase damping shows minimal differences (stronger theoretical consensus)\n")
-        f.write("• Performance differences reflect architectural optimization strategies\n")
-        f.write("• Cross-platform portability requires systematic validation like SimSHADOW\n\n")
-        
+                
         f.write("OUTPUT FILES GENERATED:\n")
-        f.write(f"• JSON results: {results_file}\n")
-        f.write(f"• Text report: {report_file}\n")
-        f.write(f"• Experiment log: {log_file}\n")
-        f.write(f"• Console output: {output_file}\n")
-        f.write("• Updated figures: figures/figure2-5_*.pdf\n")
-        f.write("• Updated table: results/table1_identification.txt\n")
+        f.write(f"* JSON results: {results_file}\n")
+        f.write(f"* Text report: {report_file}\n")
+        f.write(f"* Experiment log: {log_file}\n")
+        f.write(f"* Console output: {output_file}\n")
+        f.write("* Updated figures: figures/figure2-5_*.pdf\n")
+        f.write("* Updated table: results/table1_identification.txt\n")
     
     # 3. Update Table 1 with latest results
     table_content = f"""Table 1: Noise Channel Identification Accuracy (%)
@@ -183,27 +174,19 @@ def main():
     
     # Setup logging and output saving
     log_file, output_file, timestamp = setup_logging()
-    
     logging.info("SimSHADOW: Real Quantum Circuit Validation")
     logging.info("=" * 70)
     logging.info(f"Experiment started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     logging.info(f"Session ID: {timestamp}")
     logging.info("All outputs will be automatically saved with comprehensive logging")
     
-    # Initialize platforms
+    # Tested platforms Configuration
     qiskit_platform = QiskitPlatform(n_qubits=2)
     cirq_platform = CirqPlatform(n_qubits=2)
-    
-    # Test configurations
-    # Use parameters that highlight unique characteristics of each noise type:
-    # - Depolarizing: uniform decoherence (baseline)
-    # - Amplitude damping: energy dissipation (higher parameter to emphasize |1⟩ effects)
-    # - Phase damping: dephasing (moderate parameter to emphasize coherence effects)
-    # This makes fingerprint differences clearly visible while remaining scientifically valid
     noise_configs = [
-        ('depolarizing', DepolarizingChannel(0.05)),           # Baseline: uniform decoherence
-        ('amplitude_damping', AmplitudeDampingChannel(0.10)),   # 2x: emphasizes energy dissipation
-        ('phase_damping', PhaseDampingChannel(0.08))          # 1.6x: emphasizes dephasing
+        ('depolarizing', DepolarizingChannel(0.1)),
+        ('amplitude_damping', AmplitudeDampingChannel(0.1)),
+        ('phase_damping', PhaseDampingChannel(0.08))
     ]
     
     # Track comprehensive timing and results
@@ -236,8 +219,8 @@ def main():
             
             test_states = create_test_states(n_qubits=2)
             observables = create_pauli_observables(n_qubits=2)
-            n_states = len(test_states)  # 9
-            n_observables = len(observables)  # 15
+            n_states = len(test_states) # 9
+            n_observables = len(observables) # 15
             
             # Initialize fingerprint matrix: F[i, j] = E_noisy(state_i, obs_j) - E_ideal(state_i, obs_j)
             fingerprint = np.zeros((n_states, n_observables))
@@ -245,8 +228,8 @@ def main():
             # Direct measurement: measure each observable in its own basis
             # This is simpler and more efficient for a fixed set of observables
             measurements = n_states * n_observables  # 9 × 15 = 135
-            shots_per_measurement = 500
-            total_shots_this_platform = measurements * shots_per_measurement  # 135 × 500 = 67,500
+            shots_per_measurement = 10000
+            total_shots_this_platform = measurements * shots_per_measurement  # 135 × 10000
             
             # Compute fingerprint by measuring each state-observable pair directly
             measurement_count = 0
@@ -265,8 +248,8 @@ def main():
                     
                     measurement_count += 1
                     
-                    # Log progress every 30 measurements
-                    if measurement_count % 30 == 0:
+                    # Log progress every 100 measurements
+                    if measurement_count % 100 == 0:
                         logging.info(f"      Progress: {measurement_count}/{measurements} measurements completed")
             
             platform_time = time.time() - platform_start
@@ -370,7 +353,7 @@ def main():
             'states_tested': 9,
             'observables_per_state': 15,
             'noise_configurations': 3,
-            'shots_per_measurement': 500,
+            'shots_per_measurement': 10000,
             'method': 'direct_measurement',  # Direct measurement in each observable's basis
             'platforms': ['qiskit', 'cirq']
         },
@@ -418,47 +401,36 @@ def main():
     logging.info("=" * 70)
     
     logging.info(f"\nExperimental summary:")
-    logging.info(f"• Session ID: {timestamp}")
-    logging.info(f"• Method: Direct measurement in each observable's basis")
-    logging.info(f"• Total measurements: {total_measurements:,} (9 states × 15 observables)")
-    logging.info(f"• Total quantum shots: {total_shots:,} ({total_measurements} measurements × 500 shots)")
-    logging.info(f"• Total execution time: {total_time:.1f} seconds ({total_time/60:.1f} minutes)")
-    logging.info(f"• States tested: 9 (computational basis, superposition, GHZ)")
-    logging.info(f"• Observables tested: 15 per state (Pauli operators)")
-    logging.info(f"• Shots per measurement: 500")
-    logging.info(f"• Noise configurations: 3 (depolarizing, amplitude damping, phase damping)")
+    logging.info(f"* Session ID: {timestamp}")
+    logging.info(f"* Method: Direct measurement in each observable's basis")
+    logging.info(f"* Total measurements: {total_measurements:,} (9 states × 15 observables)")
+    logging.info(f"* Total quantum shots: {total_shots:,} ({total_measurements} measurements × 10000 shots)")
+    logging.info(f"* Total execution time: {total_time:.1f} seconds ({total_time/60:.1f} minutes)")
+    logging.info(f"* States tested: 9 (computational basis, superposition, GHZ)")
+    logging.info(f"* Observables tested: 15 per state (Pauli operators)")
+    logging.info(f"* Shots per measurement: 10000")
+    logging.info(f"* Noise configurations: 3 (depolarizing, amplitude damping, phase damping)")
     
     logging.info(f"\nPlatform performance:")
-    logging.info(f"• Qiskit AerSimulator: {timing_data['qiskit']['total_time']:.1f}s, {timing_data['qiskit']['measurements_per_sec']:.1f} measurements/sec")
-    logging.info(f"• Cirq DensityMatrixSimulator: {timing_data['cirq']['total_time']:.1f}s, {timing_data['cirq']['measurements_per_sec']:.1f} measurements/sec")
-    logging.info(f"• Performance advantage: Cirq {experiment_data['execution_stats']['performance_ratio']:.1f}× faster than Qiskit")
+    logging.info(f"* Qiskit AerSimulator: {timing_data['qiskit']['total_time']:.1f}s, {timing_data['qiskit']['measurements_per_sec']:.1f} measurements/sec")
+    logging.info(f"* Cirq DensityMatrixSimulator: {timing_data['cirq']['total_time']:.1f}s, {timing_data['cirq']['measurements_per_sec']:.1f} measurements/sec")
+    logging.info(f"* Performance advantage: Cirq {experiment_data['execution_stats']['performance_ratio']:.1f}× faster than Qiskit")
     
     logging.info(f"\nCross-platform validation:")
     for noise_type, distance in cross_platform_distances.items():
-        logging.info(f"• {noise_type.replace('_', ' ').title()}: Distance = {distance:.4f}")
+        logging.info(f"* {noise_type.replace('_', ' ').title()}: Distance = {distance:.4f}")
     
     logging.info(f"\nAll outputs saved:")
-    logging.info(f"• Structured results: {results_file}")
-    logging.info(f"• Human-readable report: {report_file}")
-    logging.info(f"• Detailed experiment log: {log_file}")
-    logging.info(f"• Console output: {output_file}")
-    logging.info(f"• Updated figures: figures/figure2-5_*.pdf")
-    logging.info(f"• Updated table: results/table1_identification.txt")
-    
-    logging.info(f"\nScientific validation:")
-    logging.info("• Direct measurement in each observable's basis (simpler and efficient for fixed observables)")
-    logging.info("• Real quantum circuits executed on both platforms")
-    logging.info("• Cross-platform implementation differences quantified")
-    logging.info("• Performance benchmarks established")
-    logging.info("• Publication-ready results generated")
-    logging.info("• Complete experimental reproducibility ensured")
-    
+    logging.info(f"* Structured results: {results_file}")
+    logging.info(f"* Human-readable report: {report_file}")
+    logging.info(f"* Detailed experiment log: {log_file}")
+    logging.info(f"* Console output: {output_file}")
+    logging.info(f"* Updated figures: figures/figure2-5_*.pdf")
+    logging.info(f"* Updated table: results/table1_identification.txt")
+        
     logging.info(f"\nSimSHADOW session {timestamp} completed successfully")
     logging.info(f"Finished: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    
-    print(f"\nAll outputs automatically saved")
     print(f"Check results/ and logs/ directories for complete experimental data")
-    print(f"SimSHADOW ready for publication")
 
 if __name__ == "__main__":
     main() 
