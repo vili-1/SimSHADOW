@@ -56,7 +56,7 @@ def plot_results(arr,title,_vmax=2.0,_vmin=-2.0):
   plt.tight_layout()
   plt.show()
 
-path = '/content/' #SimSHADOW_artifact/results/'
+path = 'results/'
 fingerprints = {}
 fingerprintstypes = []
 
