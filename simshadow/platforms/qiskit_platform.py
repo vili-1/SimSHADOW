@@ -126,13 +126,13 @@ class QiskitPlatform:
         if self.noise_model:
             job = self.simulator.run(
                 transpile(circuit, self.simulator),
-                shots=1,
+                shots=10000,
                 noise_model=self.noise_model
             )
         else:
             job = self.simulator.run(
                 transpile(circuit, self.simulator),
-                shots=1
+                shots=10000
             )
         
         result = job.result()
@@ -147,7 +147,7 @@ class QiskitPlatform:
     def compute_expectation_value(self, 
                                 quantum_state: QuantumState, 
                                 observable: PauliObservable,
-                                shots: int = 1000) -> float:
+                                shots: int = 10000) -> float:
         """
         Compute expectation value of Pauli observable with proper noise simulation.
         
