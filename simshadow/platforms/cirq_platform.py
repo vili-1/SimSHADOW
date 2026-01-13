@@ -144,7 +144,7 @@ class CirqPlatform:
     def compute_expectation_value(self, 
                                 quantum_state: QuantumState, 
                                 observable: PauliObservable,
-                                shots: int = 1000) -> float:
+                                shots: int = 10000) -> float:
         """
         Compute expectation value of Pauli observable with proper noise simulation.
         
