@@ -16,6 +16,13 @@ class QuantumState:
         self.state_vector = state_vector
         self.name = name
         self.n_qubits = int(np.log2(len(state_vector)))
+
+    def to_string(self) -> str:
+        return (
+            f"QuantumState(name={self.name!r}, "
+            f"n_qubits={self.n_qubits}, "
+            f"state_vector={self.state_vector})"
+        )
     
     @classmethod 
     def computational_basis_state(cls, bitstring: str) -> 'QuantumState':
