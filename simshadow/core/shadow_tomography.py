@@ -1,5 +1,5 @@
 """
-Classical Shadow Tomography implementation for quantum state characterization.
+Classical Shadow Tomography implementation for quantum state characterisation.
 
 Based on Huang et al. "Predicting Many Properties of a Quantum System from Very Few Measurements"
 """
