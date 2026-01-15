@@ -11,7 +11,6 @@ from qiskit.quantum_info import Statevector, Operator, DensityMatrix
 from qiskit_aer import AerSimulator
 from qiskit_aer.noise import NoiseModel, depolarizing_error, amplitude_damping_error, phase_damping_error
 from qiskit.quantum_info import state_fidelity
-from qiskit.converters import circuit_to_dag
 
 from ..core.shadow_tomography import QuantumState, PauliObservable
 from ..core.noise_models import NoiseChannel, DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
@@ -67,11 +66,6 @@ class QiskitPlatform:
 
         self.noise_model = noise_model
 
-    def is_qubit_active(self, qc, index) -> bool:
-        dag = circuit_to_dag(qc)
-        target_qubit = qc.qubits[index]
-        return target_qubit not in dag.idle_wires()
-
     def prepare_state_circuit(self, quantum_state: QuantumState) -> QuantumCircuit:
         """Create Qiskit circuit to prepare the specified quantum state."""
         circuit = QuantumCircuit(self.n_qubits)
@@ -100,11 +94,7 @@ class QiskitPlatform:
             circuit.h(0)
             for i in range(1, self.n_qubits):
                 circuit.cx(0, i)
-
-        for i in range(self.n_qubits):
-            if not self.is_qubit_active(circuit,i):
-                circuit.id(i)
-
+                
         return circuit
 
     def measure_pauli(self, quantum_state: QuantumState, pauli_string: str) -> str:
@@ -127,6 +117,8 @@ class QiskitPlatform:
                 circuit.ry(-np.pi/2, i)  # Rotate Y by -π/2 to measure X
             elif pauli == 'Y':
                 circuit.rx(np.pi/2, i)   # Rotate X by π/2 to measure Y
+            elif pauli == 'Z' or pauli == 'I':
+                circuit.id(i)
             # Z measurement is in computational basis (no rotation needed)
             # Z and I: no rotation
 
@@ -179,6 +171,8 @@ class QiskitPlatform:
                 circuit.ry(-np.pi/2, i)
             elif pauli == 'Y':
                 circuit.rx(np.pi/2, i)
+            elif pauli == 'Z' or pauli == 'I':
+                circuit.id(i)
 
         # Add measurements
         circuit.measure_all()
