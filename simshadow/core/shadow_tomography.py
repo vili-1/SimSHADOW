@@ -58,7 +58,7 @@ class QuantumState:
                     if not ((j >> (n_qubits - 1 - i)) & 1):
                         state_vector[j] = 0
         
-        # Normalize
+        # Normalise
         norm = np.linalg.norm(state_vector)
         if norm > 0:
             state_vector /= norm
@@ -117,7 +117,7 @@ class PauliObservable:
 
 class ClassicalShadowTomography:
     """
-    Implements classical shadow tomography for efficient quantum state characterization.
+    Implements classical shadow tomography for efficient quantum state characterisation.
     
     Based on the methodology described in the SimSHADOW paper for quantum simulator validation.
     """
@@ -178,7 +178,7 @@ class ClassicalShadowTomography:
                                  observable: PauliObservable,
                                  shadows: Optional[List[Dict]] = None) -> Tuple[float, float]:
         """
-        Estimate expectation value of observable using classical shadows.
+        Estimate the expectation value of an observable using classical shadows.
         Uses the unbiased Pauli measurement estimator with median-of-means aggregation.
         
         Args:
@@ -204,9 +204,9 @@ class ClassicalShadowTomography:
         
         estimates = np.asarray(per_shot_estimates, dtype=float)
         
-        # Median-of-means: split into equal-size blocks, take mean per block then median
+        # Median-of-means: split into equal-size blocks, take mean per block, then median
         n = len(estimates)
-        # Choose ~sqrt(n) blocks but at least 3 and at most n
+        # Choose ~sqrt(n) blocks, but at least 3 and at most n
         n_blocks = max(3, int(np.sqrt(n)))
         n_blocks = min(n_blocks, n)
         block_size = n // n_blocks if n_blocks > 0 else n
