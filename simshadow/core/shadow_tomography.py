@@ -11,8 +11,29 @@ from abc import ABC, abstractmethod
 
 class QuantumState:
     """Represents a quantum state for shadow tomography."""
-    
-    def __init__(self, state_vector: np.ndarray, name: str = ""):
+    def __init__(self, state_vector: np.ndarray, name: str):
+        # Add some checks here to avoid memory corruption.
+        # If any of these happen, you need to use the explicit methods
+        # Like this: state = QuantumState.computational_basis_state("00")
+        if not isinstance(state_vector, np.ndarray):
+            raise TypeError(
+                "QuantumState must be constructed from a NumPy state vect>
+                "Use computational_basis_state() or superposition_state()>
+            )
+
+        if not name:
+            raise ValueError(
+                "QuantumState.name must be provided. "
+                "Use computational_basis_state() or superposition_state()>
+            )
+
+        if state_vector.ndim != 1:
+            raise ValueError("state_vector must be a 1D array")
+
+        dim = len(state_vector)
+        if dim == 0 or (dim & (dim - 1)) != 0:
+            raise ValueError("Length of state_vector must be a power of 2>
+
         self.state_vector = state_vector
         self.name = name
         self.n_qubits = int(np.log2(len(state_vector)))
