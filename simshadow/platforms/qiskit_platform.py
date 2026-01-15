@@ -198,6 +198,8 @@ class QiskitPlatform:
         total_shots = sum(counts.values())
         
         for bitstring, count in counts.items():
+            bitstring = bitstring[::-1]   # FIX QISKIT ODD REPRESENTATION!
+            
             # Compute eigenvalue as product of individual qubit eigenvalues
             eigenvalue = 1.0
             for i, pauli in enumerate(observable.pauli_string):
