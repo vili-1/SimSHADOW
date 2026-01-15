@@ -100,17 +100,17 @@ class QiskitPlatform:
     def measure_pauli(self, quantum_state: QuantumState, pauli_string: str) -> str:
         """
         Measure quantum state in specified Pauli basis and return outcome.
-        
+
         Args:
             quantum_state: The quantum state to measure
             pauli_string: Pauli string like 'XY', 'ZZ', etc.
-            
+
         Returns:
             Measurement outcome as bitstring
         """
         # Prepare initial state
         circuit = self.prepare_state_circuit(quantum_state)
-        
+
         # Add Pauli basis rotations
         for i, pauli in enumerate(pauli_string):
             if pauli == 'X':
@@ -118,30 +118,32 @@ class QiskitPlatform:
             elif pauli == 'Y':
                 circuit.rx(np.pi/2, i)   # Rotate X by π/2 to measure Y
             # Z measurement is in computational basis (no rotation needed)
-        
-        # Add measurements  
-        circuit.measure_all()
-        
+            # Z and I: no rotation
+
         # Execute circuit with noise
+        circuit.measure_all()
         if self.noise_model:
             job = self.simulator.run(
                 transpile(circuit, self.simulator),
-                shots=10000,
+                shots=1, # To follow classical shadow, and this is the only place where shots are 1.
                 noise_model=self.noise_model
             )
         else:
             job = self.simulator.run(
                 transpile(circuit, self.simulator),
-                shots=10000
+                shots=1 # To follow classical shadow, and this is the only place where shots are 1.
             )
-        
+
         result = job.result()
         counts = result.get_counts()
-        
-        # Return the measured bitstring (Qiskit returns counts dict)
-        # Normalize bit order to little-endian qubit index order q0..q{n-1}
-        raw = list(counts.keys())[0]
-        outcome = raw[::-1]
+        bitstring = next(iter(counts))
+        outcome = bitstring[::-1]
+
+        #print("counts:", counts)
+        #print("total shots:", sum(counts.values()))
+        #print("raw bitstring (Qiskit):", bitstring)
+        #print("reversed (qubit order 0..n-1):", bitstring[::-1])
+
         return outcome
     
     def compute_expectation_value(self, 
