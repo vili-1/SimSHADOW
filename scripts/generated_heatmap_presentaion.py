@@ -9,15 +9,16 @@ import pprint
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot_results(arr,title,_vmax=2.0,_vmin=-2.0):
-  # Labels for the graphs:
+def plot_results(arr,title,_vmax=2.0,_vmin=-2.0,colour="coolwarm"):
+  # 15 observables
   observables = ["XX","XY","XZ","YX","YY","YZ","ZX","ZY","ZZ","XI","IX","YI","IY","ZI","IZ"]
+  # 9 states
   states = ["|00⟩","|01⟩","|10⟩","|11⟩","|+0⟩","|-0⟩","|0+⟩","|0-⟩","|Φ⁺⟩"]
-
-  fig, ax = plt.subplots(figsize=(12, 6))
+  
+  fig, ax = plt.subplots(figsize=(6, 3))
   im = ax.imshow(
     arr,
-    cmap="coolwarm",
+    cmap=colour,
     aspect="auto",
     interpolation="nearest",
     vmin=_vmax,
@@ -39,7 +40,7 @@ def plot_results(arr,title,_vmax=2.0,_vmin=-2.0):
   cbar = fig.colorbar(im, ax=ax)
   cbar.set_label("E_noisy - E_ideal", rotation=270, labelpad=15)
 
-  # Uncomment if you want to see the actual values: 
+  # Uncomment if you want to see the actual values:
   #fmt="{:.5f}"
   #for i in range(arr.shape[0]):
   #  for j in range(arr.shape[1]):
@@ -56,7 +57,7 @@ def plot_results(arr,title,_vmax=2.0,_vmin=-2.0):
   plt.tight_layout()
   plt.show()
 
-path = 'results/'
+path = 'results/' # Main folder/results
 fingerprints = {}
 fingerprintstypes = []
 
@@ -102,7 +103,6 @@ for ftype, matrices in grouped.items():
         "std": np.std(stack, axis=0),
         "n": stack.shape[0]
     }
-  
 # --- Get the global min/max to set it for the graphs uniqely
 mean_min = min(np.min(stats["mean"]) for stats in mean_std.values())
 mean_max = max(np.max(stats["mean"]) for stats in mean_std.values())
@@ -126,6 +126,5 @@ for ftype, stats in mean_std.items():
       print(stats["mean"])
       print("\nElementwise std (9x15):")
       print(stats["std"])
-    
-    plot_results(stats["mean"],ftype+":MEAN",abs_mean_max,-abs_mean_max)
-    plot_results(stats["std"],ftype+":STDV",abs_std_max,-abs_std_max)
+    plot_results(stats["mean"],ftype+": MEAN",abs_mean_max,-abs_mean_max,"twilight_shifted")
+    plot_results(stats["std"],ftype+": STDV",abs_std_max*1.008,-abs_std_max*1.008,"PiYG")
