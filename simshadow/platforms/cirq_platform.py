@@ -13,7 +13,6 @@ from cirq.circuits import InsertStrategy
 from ..core.shadow_tomography import QuantumState, PauliObservable
 from ..core.noise_models import NoiseChannel, DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
 
-
 class CirqPlatform:
     """
     Cirq simulator platform for SimSHADOW experiments.
@@ -121,6 +120,8 @@ class CirqPlatform:
                 circuit.append(cirq.ry(-np.pi/2)(self.qubits[i]))
             elif pauli == 'Y':
                 circuit.append(cirq.rx(np.pi/2)(self.qubits[i]))
+            elif pauli == 'I' or pauli == 'Z':
+                circuit.append(cirq.I(self.qubits[i]))
             # Z measurement is in computational basis (no rotation needed)
         
         # Add noise if configured
@@ -138,7 +139,8 @@ class CirqPlatform:
         outcome_bits = []
         for i in range(self.n_qubits):
             outcome_bits.append(str(result.measurements[f'q{i}'][0][0]))
-        
+        #print(outcome_bits)
+
         return ''.join(outcome_bits)
     
     def compute_expectation_value(self, 
@@ -165,7 +167,9 @@ class CirqPlatform:
                 circuit.append(cirq.ry(-np.pi/2)(self.qubits[i]))
             elif pauli == 'Y':
                 circuit.append(cirq.rx(np.pi/2)(self.qubits[i]))
-        
+            elif pauli == 'I' or pauli == 'Z':
+                circuit.append(cirq.I(self.qubits[i]))
+
         # Add noise if configured
         if self.current_noise_channel:
             circuit = self._add_noise_to_circuit(circuit)
@@ -173,7 +177,7 @@ class CirqPlatform:
         # Add measurements
         for i in range(self.n_qubits):
             circuit.append(cirq.measure(self.qubits[i], key=f'q{i}'))
-        
+
         # Execute circuit with multiple shots
         result = self.simulator.run(circuit, repetitions=shots)
         
@@ -268,7 +272,7 @@ class CirqPlatform:
         # Add noise if configured
         if self.current_noise_channel:
             circuit = self._add_noise_to_circuit(circuit)
-        
+
         # Simulate to get final density matrix
         result = self.simulator.simulate(circuit)
         final_density_matrix = result.final_density_matrix
