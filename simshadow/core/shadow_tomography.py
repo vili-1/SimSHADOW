@@ -17,14 +17,14 @@ class QuantumState:
         # Like this: state = QuantumState.computational_basis_state("00")
         if not isinstance(state_vector, np.ndarray):
             raise TypeError(
-                "QuantumState must be constructed from a NumPy state vect>
-                "Use computational_basis_state() or superposition_state()>
+                "QuantumState must be constructed from a NumPy state vector"
+                "Use computational_basis_state() or superposition_state()"
             )
 
         if not name:
             raise ValueError(
                 "QuantumState.name must be provided. "
-                "Use computational_basis_state() or superposition_state()>
+                "Use computational_basis_state() or superposition_state()"
             )
 
         if state_vector.ndim != 1:
@@ -32,7 +32,7 @@ class QuantumState:
 
         dim = len(state_vector)
         if dim == 0 or (dim & (dim - 1)) != 0:
-            raise ValueError("Length of state_vector must be a power of 2>
+            raise ValueError("Length of state_vector must be a power of 2")
 
         self.state_vector = state_vector
         self.name = name
