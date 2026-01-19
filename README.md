@@ -49,7 +49,11 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-**4. Run the complete experiment (generate fresh data)**
+**4. Reproduce Results**
+
+To reproduce the figures in the paper, follow the instructions in scripts.
+
+**5. Run the complete experiment (generate fresh data)**
 
 ```bash
 python run_simshadow.py
@@ -65,7 +69,7 @@ This will:
 - Run physics-informed noise channel classification and parameter estimation
 - Save timestamped results to `results/simshadow_results_*.json` and detailed logs to `logs/`
 
-**4. Generate figures from the latest results**
+**6. Generate figures from the latest results**
 
 ```bash
 python Documentation/gen_figures.py 2>&1 | grep -v "UserWarning"
@@ -86,7 +90,7 @@ for i in 1 2 3; do
 done
 ```
 
-**5. Verify expected outputs**
+**7. Verify expected outputs**
 
 ```bash
 python verify.py
