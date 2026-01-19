@@ -1,5 +1,7 @@
 # Scripts for the evaluation of the paper
 
+This code will generate the six figures for RQ1 and RQ2.
+
 ## Install
 ```
 sudo add-apt-repository ppa:deadsnakes/ppa
