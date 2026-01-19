@@ -3,7 +3,6 @@ Qiskit platform implementation for SimSHADOW quantum simulator validation.
 
 Provides Qiskit-specific quantum circuit execution and noise model integration.
 """
-
 import numpy as np
 from typing import List, Dict, Optional
 from qiskit import QuantumCircuit, transpile
@@ -11,15 +10,12 @@ from qiskit.quantum_info import Statevector, Operator, DensityMatrix
 from qiskit_aer import AerSimulator
 from qiskit_aer.noise import NoiseModel, depolarizing_error, amplitude_damping_error, phase_damping_error
 from qiskit.quantum_info import state_fidelity
-
 from ..core.shadow_tomography import QuantumState, PauliObservable
 from ..core.noise_models import NoiseChannel, DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
-
 
 class QiskitPlatform:
     """
     Qiskit simulator platform for SimSHADOW experiments.
-
     Handles circuit construction, noise model configuration, and measurement execution
     specifically for Qiskit-based simulations.
     """
@@ -32,7 +28,10 @@ class QiskitPlatform:
         self.current_noise_config: Optional[Dict] = None
 
     def configure_noise(self, noise_channel: NoiseChannel):
-        """Configure Qiskit noise model based on SimSHADOW noise channel."""
+        """
+        Configure Qiskit noise model based on SimSHADOW noise channel.
+        Called from run_simshadow.py
+        """
         self.current_noise_config = {
             'type': noise_channel.name,
             'parameter': noise_channel.parameter
@@ -232,31 +231,3 @@ class QiskitPlatform:
         self.noise_model = original_noise
 
         return expectation
-
-    def validate_state_preparation(self, quantum_state: QuantumState) -> float:
-        """Validate that state preparation circuit produces correct state."""
-        # Create circuit without noise
-        circuit = self.prepare_state_circuit(quantum_state)
-
-        # Get statevector
-        statevector_sim = AerSimulator(method='statevector')
-        job = statevector_sim.run(transpile(circuit, statevector_sim,optimization_level=0))
-        result = job.result()
-        final_statevector = result.get_statevector()
-
-        # Compute fidelity with target state
-        target_sv = Statevector(quantum_state.state_vector)
-        fidelity = state_fidelity(final_statevector, target_sv)
-
-        return float(fidelity)
-
-    def get_platform_info(self) -> Dict:
-        """Get platform-specific information for debugging."""
-        return {
-            'platform': self.platform_name,
-            'backend': 'AerSimulator',
-            'noise_model_active': self.noise_model is not None,
-            'current_noise_config': self.current_noise_config,
-            'n_qubits': self.n_qubits
-        }
-
