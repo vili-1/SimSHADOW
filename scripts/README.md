@@ -17,7 +17,7 @@ python3.12 -m venv ~/.venv/mypythonapp
 source ~/.venv/mypythonapp/bin/activate
 sudo apt install nano unzip
 ```
-Then pull SimShadow repository:
+Then pull the SimShadow repository:
 ```
 cd SimSHADOW_artifact-main/
 pip install -r requirements.txt
@@ -40,7 +40,7 @@ For example:
 nohup ./scripts/generate_n_fingerprints.sh /users/kevenmen/SimSHADOW_artifact-main 1000 > all_16012026.log 2>&1 &
 ```
 
-## HeatMaps:
+## HeatMaps
 From a machine with a GUI, run:
 ```
 python3 scripts/generated_heatmap_presentaion.py
