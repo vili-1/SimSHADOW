@@ -5,10 +5,10 @@ Implements the core fingerprinting methodology described in the SimSHADOW paper.
 """
 
 import numpy as np
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Optional
 from dataclasses import dataclass
-from .shadow_tomography import QuantumState, PauliObservable, ClassicalShadowTomography
-from .noise_models import NoiseChannel
+from simshadow.core.shadow_tomography import QuantumState, PauliObservable, ClassicalShadowTomography
+from simshadow.core.noise_models import NoiseChannel
 
 
 @dataclass

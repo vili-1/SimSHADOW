@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import json
 import glob
+import json
 import os
-import sys
+
 
 def main() -> int:
     json_paths = sorted(glob.glob(os.path.join('results', 'simshadow_results_*.json')))

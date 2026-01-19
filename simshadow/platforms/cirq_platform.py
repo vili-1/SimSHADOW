@@ -3,13 +3,16 @@ Cirq platform implementation for SimSHADOW quantum simulator validation.
 
 Provides Cirq-specific quantum circuit execution and noise model integration.
 """
-import numpy as np
+from typing import Dict, Optional
+
 import cirq
-from typing import List, Dict, Optional, Tuple
-from cirq import Simulator, DensityMatrixSimulator
+import numpy as np
+from cirq import DensityMatrixSimulator
 from cirq.circuits import InsertStrategy
-from ..core.shadow_tomography import QuantumState, PauliObservable
-from ..core.noise_models import NoiseChannel, DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
+
+from simshadow.core.noise_models import NoiseChannel, DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
+from simshadow.core.shadow_tomography import QuantumState, PauliObservable
+
 
 class CirqPlatform:
     """

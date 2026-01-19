@@ -1,1 +1,0 @@
-# Core SimSHADOW components 

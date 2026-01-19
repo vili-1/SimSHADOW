@@ -16,21 +16,18 @@ import sys
 import time
 import numpy as np
 import json
-import matplotlib.pyplot as plt
 from pathlib import Path
-import seaborn as sns
-import pandas as pd
 from datetime import datetime
 import logging
 
 # Ensure the package can be imported
 sys.path.insert(0, '.')
 
-from simshadow.core.shadow_tomography import ClassicalShadowTomography, QuantumState, create_test_states, create_pauli_observables
-from simshadow.core.noise_models import DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
-from simshadow.core.fingerprint import FingerprintMatrix, NoiseFingerprint
-from simshadow.platforms.qiskit_platform import QiskitPlatform
-from simshadow.platforms.cirq_platform import CirqPlatform
+from Documentation.simshadow import QuantumState, create_test_states, create_pauli_observables
+from Documentation.simshadow import DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
+from Documentation.simshadow import FingerprintMatrix, NoiseFingerprint
+from Documentation.simshadow import QiskitPlatform
+from Documentation.simshadow import CirqPlatform
 
 # Create directories for all outputs
 Path("figures").mkdir(exist_ok=True)
@@ -215,7 +212,7 @@ def main():
             logging.info(f"   {platform_name.upper()}: Executing quantum circuit measurements...")
             
             # Get test states and observables
-            from simshadow.core.shadow_tomography import create_pauli_observables, create_test_states
+            from Documentation.simshadow import create_pauli_observables, create_test_states
             
             test_states = create_test_states(n_qubits=2)
             observables = create_pauli_observables(n_qubits=2)

@@ -3,15 +3,16 @@ Qiskit platform implementation for SimSHADOW quantum simulator validation.
 
 Provides Qiskit-specific quantum circuit execution and noise model integration.
 """
+from typing import Dict, Optional
+
 import numpy as np
-from typing import List, Dict, Optional
 from qiskit import QuantumCircuit, transpile
-from qiskit.quantum_info import Statevector, Operator, DensityMatrix
 from qiskit_aer import AerSimulator
 from qiskit_aer.noise import NoiseModel, depolarizing_error, amplitude_damping_error, phase_damping_error
-from qiskit.quantum_info import state_fidelity
-from ..core.shadow_tomography import QuantumState, PauliObservable
-from ..core.noise_models import NoiseChannel, DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
+
+from simshadow.core.noise_models import NoiseChannel, DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
+from simshadow.core.shadow_tomography import QuantumState, PauliObservable
+
 
 class QiskitPlatform:
     """
