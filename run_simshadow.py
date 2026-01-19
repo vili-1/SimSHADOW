@@ -19,6 +19,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 import logging
+import argparse
 
 from simshadow.core.shadow_tomography import create_test_states, create_pauli_observables
 from simshadow.core.fingerprint import NoiseFingerprint, FingerprintMatrix
@@ -34,7 +35,16 @@ Path("Documentation/figures").mkdir(exist_ok=True)
 Path("Documentation/results").mkdir(exist_ok=True)
 Path("logs").mkdir(exist_ok=True)
 
-def setup_logging():
+def parse_args():
+    parser = argparse.ArgumentParser(description="SimSHADOW experiment runner")
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug mode: write logs, JSON results, reports, and tables to disk"
+    )
+    return parser.parse_args()
+    
+def setup_logging(debug: bool):
     """Configure logging for every run."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     log_file = f"logs/simshadow_experiment_{timestamp}.log"
@@ -50,15 +60,16 @@ def setup_logging():
         ]
     )
 
-    # Silence noisy third-party libraries
-    for noisy in [
-        "qiskit",
-        "qiskit.transpiler",
-        "qiskit.compiler",
-        "qiskit_aer",
-        "cirq"
-    ]:
-        logging.getLogger(noisy).setLevel(logging.WARNING)
+    if not debug:
+        # Silence noisy third-party libraries
+        for noisy in [
+            "qiskit",
+            "qiskit.transpiler",
+            "qiskit.compiler",
+            "qiskit_aer",
+            "cirq"
+        ]:
+            logging.getLogger(noisy).setLevel(logging.WARNING)
     
     # Also save output to a text file for easy review
     output_file = f"results/simshadow_output_{timestamp}.txt"
@@ -181,7 +192,9 @@ def main():
     """Execute comprehensive SimSHADOW validation with complete output logging."""
     
     # Setup logging and output saving
-    log_file, output_file, timestamp = setup_logging()
+    args = parse_args()
+    debug = args.debug
+    log_file, output_file, timestamp = setup_logging(debug)
     logging.info("SimSHADOW: Real Quantum Circuit Validation")
     logging.info("=" * 70)
     logging.info(f"Experiment started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -403,8 +416,9 @@ def main():
     }
     
     # Save all outputs comprehensively
-    logging.info("\nSaving all experimental outputs...")
-    results_file, report_file = save_all_outputs(experiment_data, log_file, output_file, timestamp)
+    if not debug:
+        logging.info("\nSaving all experimental outputs...")
+        results_file, report_file = save_all_outputs(experiment_data, log_file, output_file, timestamp)
     
     # Final comprehensive summary
     logging.info("\n" + "=" * 70)
@@ -440,8 +454,11 @@ def main():
     logging.info(f"* Updated table: results/table1_identification.txt")  
     logging.info(f"\nSimSHADOW session {timestamp} completed successfully")
     logging.info(f"Finished: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    
-    print(f">> Done. Check results/ and logs/ directories for complete experimental data ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')}).")
+
+    if not debug:
+        print(f">> Done. Check above experimental log and data ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')}).")
+    else:
+        print(f">> Done. Check results/ and logs/ directories for complete experimental data ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')}).")
 
 if __name__ == "__main__":
     main() 
