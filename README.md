@@ -51,7 +51,7 @@ pip install -e .
 
 **4. Reproduce Results**
 
-To reproduce the figures in the paper, follow the instructions in scripts.
+To reproduce the figures in the paper, follow the instructions in [scripts](https://github.com/vili-1/SimSHADOW_artifact/blob/main/scripts/README.md).
 
 **5. Run the complete experiment (generate fresh data)**
 
