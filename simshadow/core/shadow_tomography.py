@@ -301,7 +301,7 @@ class ClassicalShadowTomography:
             Tuple of (expectation_value, achieved_precision)
 
         Called:
-            from fingerprint.py
+            generate_fingerprint from fingerprint.py
         """
         measurements_per_batch = 100
         current_measurements = 0
