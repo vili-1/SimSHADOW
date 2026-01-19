@@ -228,14 +228,15 @@ class QiskitPlatform:
         return expectation
 
     ## WORKING VERSION OF IDEAL
-    def get_ideal_expectation(self, quantum_state: QuantumState,
-                            observable: PauliObservable) -> float:
+    def get_ideal_expectation(self, quantum_state: QuantumState, 
+                              observable: PauliObservable,
+                              shots: int = 10000) -> float:
         """Get ideal (noiseless) expectation value."""
         # Temporarily disable noise
         original_noise = self.noise_model
         self.noise_model = None
 
-        expectation = self.compute_expectation_value(quantum_state, observable, shots=10000)
+        expectation = self.compute_expectation_value(quantum_state, observable, shots)
 
         # Restore noise model
         self.noise_model = original_noise
