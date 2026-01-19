@@ -21,7 +21,7 @@ from datetime import datetime
 import logging
 
 # Ensure the package can be imported
-sys.path.insert(0, '..')
+sys.path.insert(0, '')
 
 from Documentation.simshadow import QuantumState, create_test_states, create_pauli_observables
 from Documentation.simshadow import DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
@@ -30,8 +30,8 @@ from Documentation.simshadow import QiskitPlatform
 from Documentation.simshadow import CirqPlatform
 
 # Create directories for all outputs
-Path("figures").mkdir(exist_ok=True)
-Path("results").mkdir(exist_ok=True)
+Path("Documentation/figures").mkdir(exist_ok=True)
+Path("Documentation/results").mkdir(exist_ok=True)
 Path("logs").mkdir(exist_ok=True)
 
 def setup_logging():
@@ -144,7 +144,7 @@ Results file: {results_file}
 Report file: {report_file}
 """
     
-    with open('results/table1_identification.txt', 'w') as f:
+    with open('Documentation/results/table1_identification.txt', 'w') as f:
         f.write(table_content)
     
     # 4. Save console output to file as well
