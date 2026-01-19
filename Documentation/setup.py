@@ -6,7 +6,7 @@ setup(
     author="Anonymous",
     author_email="",
     description="Cross-Platform Quantum Simulator Validation through Classical Shadow Fingerprinting",
-    long_description=open("README.md").read() if open("README.md") else "",
+    long_description=open("../README.md").read() if open("../README.md") else "",
     long_description_content_type="text/markdown",
     packages=find_packages(),
     install_requires=[

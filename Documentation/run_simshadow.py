@@ -21,7 +21,7 @@ from datetime import datetime
 import logging
 
 # Ensure the package can be imported
-sys.path.insert(0, '.')
+sys.path.insert(0, '..')
 
 from Documentation.simshadow import QuantumState, create_test_states, create_pauli_observables
 from Documentation.simshadow import DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
