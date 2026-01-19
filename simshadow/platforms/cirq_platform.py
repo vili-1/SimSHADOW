@@ -38,7 +38,10 @@ class CirqPlatform:
         }
     
     def _add_noise_to_circuit(self, circuit: cirq.Circuit) -> cirq.Circuit:
-        """Add noise to circuit based on current noise configuration."""
+        """
+        Add noise to circuit based on current noise configuration.
+        Interal function only
+        """
         if self.current_noise_channel is None:
             return circuit
         
@@ -71,10 +74,13 @@ class CirqPlatform:
         return noisy_circuit
     
     def prepare_state_circuit(self, quantum_state: QuantumState) -> cirq.Circuit:
-        """Create Cirq circuit to prepare the specified quantum state."""
+        """
+        Create Cirq circuit to prepare the specified quantum state.
+        Internal function only.
+        """
         circuit = cirq.Circuit()
         
-        # Initialize circuit to prepare the target state
+        # Initialise circuit to prepare the target state
         if quantum_state.name.startswith("|0") or quantum_state.name.startswith("|1"):
             # Computational basis states
             bitstring = quantum_state.name[1:-1]  # Remove |⟩
@@ -110,6 +116,9 @@ class CirqPlatform:
             
         Returns:
             Measurement outcome as bitstring
+
+        Called:
+            measure_pauli from shadow_tomography.py
         """
         # Prepare initial state
         circuit = self.prepare_state_circuit(quantum_state)
@@ -157,6 +166,9 @@ class CirqPlatform:
             
         Returns:
             Estimated expectation value
+
+        Called:
+            main from run_simshadow.py
         """
         # Prepare state circuit
         circuit = self.prepare_state_circuit(quantum_state)
@@ -208,7 +220,8 @@ class CirqPlatform:
             expectation += eigenvalue / shots
         
         return expectation
-    
+
+    ## WORKING VERSION OF IDEAL
     def get_ideal_expectation(self, quantum_state: QuantumState, 
                             observable: PauliObservable) -> float:
         """Get ideal (noiseless) expectation value."""
@@ -222,65 +235,3 @@ class CirqPlatform:
         self.current_noise_channel = original_channel
         
         return expectation
-    
-    def validate_state_preparation(self, quantum_state: QuantumState) -> float:
-        """Validate that state preparation circuit produces correct state."""
-        # Create circuit without noise
-        circuit = self.prepare_state_circuit(quantum_state)
-        
-        # Get final state using noiseless simulator
-        noiseless_sim = cirq.Simulator()
-        result = noiseless_sim.simulate(circuit)
-        final_state = result.final_state_vector
-        
-        # Compute fidelity with target state
-        target_state = quantum_state.state_vector
-        fidelity = abs(np.vdot(target_state, final_state))**2
-        
-        return float(fidelity)
-    
-    def get_platform_info(self) -> Dict:
-        """Get platform-specific information for debugging."""
-        return {
-            'platform': self.platform_name,
-            'backend': 'DensityMatrixSimulator',
-            'noise_model_active': self.current_noise_channel is not None,
-            'current_noise_config': self.noise_config,
-            'n_qubits': self.n_qubits,
-            'qubits': [str(q) for q in self.qubits]
-        }
-    
-    def _create_pauli_operator(self, pauli_string: str) -> cirq.PauliString:
-        """Create Cirq PauliString from string representation."""
-        pauli_ops = []
-        pauli_map = {'I': cirq.I, 'X': cirq.X, 'Y': cirq.Y, 'Z': cirq.Z}
-        
-        for i, pauli_char in enumerate(pauli_string):
-            pauli_ops.append(pauli_map[pauli_char](self.qubits[i]))
-        
-        return cirq.PauliString(*pauli_ops)
-    
-    def compute_exact_expectation(self, quantum_state: QuantumState, 
-                                observable: PauliObservable) -> float:
-        """
-        Compute exact expectation value using Cirq's built-in tools.
-        Useful for validation and comparison with shadow tomography results.
-        """
-        # Prepare state circuit
-        circuit = self.prepare_state_circuit(quantum_state)
-        
-        # Add noise if configured
-        if self.current_noise_channel:
-            circuit = self._add_noise_to_circuit(circuit)
-
-        # Simulate to get final density matrix
-        result = self.simulator.simulate(circuit)
-        final_density_matrix = result.final_density_matrix
-        
-        # Create Pauli operator
-        pauli_op = self._create_pauli_operator(observable.pauli_string)
-        
-        # Compute expectation value
-        expectation = cirq.expectation_from_density_matrix(pauli_op, final_density_matrix)
-        
-        return float(expectation.real) 
