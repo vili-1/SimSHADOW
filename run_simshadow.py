@@ -41,6 +41,7 @@ def setup_logging():
     """Configure logging for every run."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     log_file = f"logs/simshadow_experiment_{timestamp}.log"
+    print(f">> Start. Progress in logger ({timestamp}).")
     
     # Configure both file and console logging
     logging.basicConfig(
@@ -426,11 +427,11 @@ def main():
     logging.info(f"* Detailed experiment log: {log_file}")
     logging.info(f"* Console output: {output_file}")
     logging.info(f"* Updated figures: figures/figure2-5_*.pdf")
-    logging.info(f"* Updated table: results/table1_identification.txt")
-        
+    logging.info(f"* Updated table: results/table1_identification.txt")  
     logging.info(f"\nSimSHADOW session {timestamp} completed successfully")
     logging.info(f"Finished: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Check results/ and logs/ directories for complete experimental data")
+    
+    print(f">> Done. Check results/ and logs/ directories for complete experimental data ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')}).")
 
 if __name__ == "__main__":
     main() 
