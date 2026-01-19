@@ -151,7 +151,7 @@ Report file: {report_file}
     with open('results/table1_identification.txt', 'w') as f:
         f.write(table_content)
     
-    # 4. Save console output to file as well
+    # 4. Save console output to file as well to results/simshadow_output_*.txt
     with open(output_file, 'w') as f:
         f.write("SimSHADOW Console Output\n")
         f.write("=" * 50 + "\n")
