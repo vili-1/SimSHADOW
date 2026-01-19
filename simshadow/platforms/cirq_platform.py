@@ -223,13 +223,14 @@ class CirqPlatform:
 
     ## WORKING VERSION OF IDEAL
     def get_ideal_expectation(self, quantum_state: QuantumState, 
-                            observable: PauliObservable) -> float:
+                              observable: PauliObservable,
+                              shots: int = 10000) -> float:
         """Get ideal (noiseless) expectation value."""
         # Temporarily disable noise
         original_channel = self.current_noise_channel
         self.current_noise_channel = None
         
-        expectation = self.compute_expectation_value(quantum_state, observable, shots=10000)
+        expectation = self.compute_expectation_value(quantum_state, observable, shots)
         
         # Restore noise configuration
         self.current_noise_channel = original_channel
