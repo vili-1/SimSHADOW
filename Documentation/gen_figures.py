@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from simshadow.visualization.plotting import FingerprintVisualizer
+from Documentation.visualization import FingerprintVisualizer
 
 def main() -> int:
     viz = FingerprintVisualizer()
