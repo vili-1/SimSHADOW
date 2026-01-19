@@ -232,31 +232,3 @@ class QiskitPlatform:
         self.noise_model = original_noise
 
         return expectation
-
-    def validate_state_preparation(self, quantum_state: QuantumState) -> float:
-        """Validate that state preparation circuit produces correct state."""
-        # Create circuit without noise
-        circuit = self.prepare_state_circuit(quantum_state)
-
-        # Get statevector
-        statevector_sim = AerSimulator(method='statevector')
-        job = statevector_sim.run(transpile(circuit, statevector_sim,optimization_level=0))
-        result = job.result()
-        final_statevector = result.get_statevector()
-
-        # Compute fidelity with target state
-        target_sv = Statevector(quantum_state.state_vector)
-        fidelity = state_fidelity(final_statevector, target_sv)
-
-        return float(fidelity)
-
-    def get_platform_info(self) -> Dict:
-        """Get platform-specific information for debugging."""
-        return {
-            'platform': self.platform_name,
-            'backend': 'AerSimulator',
-            'noise_model_active': self.noise_model is not None,
-            'current_noise_config': self.current_noise_config,
-            'n_qubits': self.n_qubits
-        }
-
