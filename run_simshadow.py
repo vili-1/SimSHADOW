@@ -42,7 +42,7 @@ def setup_logging():
     
     # Configure both file and console logging
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.INFO,    
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[
             logging.FileHandler(log_file),
@@ -58,7 +58,7 @@ def setup_logging():
         "qiskit_aer",
         "cirq"
     ]:
-    logging.getLogger(noisy).setLevel(logging.WARNING)
+        logging.getLogger(noisy).setLevel(logging.WARNING)
     
     # Also save output to a text file for easy review
     output_file = f"results/simshadow_output_{timestamp}.txt"
