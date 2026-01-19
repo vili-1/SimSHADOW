@@ -1,13 +1,10 @@
-import json
-import zipfile
 import numpy as np
-from pathlib import Path
 import json
 import os
-import glob
-import pprint
+from pathlib import Path
+
 import matplotlib.pyplot as plt
-import numpy as np
+
 
 def plot_results(arr,title,_vmax=2.0,_vmin=-2.0,colour="coolwarm"):
   # 15 observables

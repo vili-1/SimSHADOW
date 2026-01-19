@@ -16,25 +16,22 @@ import sys
 import time
 import numpy as np
 import json
-import matplotlib.pyplot as plt
 from pathlib import Path
-import seaborn as sns
-import pandas as pd
 from datetime import datetime
 import logging
 
-# Ensure the package can be imported
-sys.path.insert(0, '.')
-
-from simshadow.core.shadow_tomography import ClassicalShadowTomography, QuantumState, create_test_states, create_pauli_observables
+from simshadow.core.shadow_tomography import create_test_states, create_pauli_observables
+from simshadow.core.fingerprint import NoiseFingerprint, FingerprintMatrix
 from simshadow.core.noise_models import DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
-from simshadow.core.fingerprint import FingerprintMatrix, NoiseFingerprint
 from simshadow.platforms.qiskit_platform import QiskitPlatform
 from simshadow.platforms.cirq_platform import CirqPlatform
 
+# Ensure the package can be imported
+sys.path.insert(0, '')
+
 # Create directories for all outputs
-Path("figures").mkdir(exist_ok=True)
-Path("results").mkdir(exist_ok=True)
+Path("Documentation/figures").mkdir(exist_ok=True)
+Path("Documentation/results").mkdir(exist_ok=True)
 Path("logs").mkdir(exist_ok=True)
 
 def setup_logging():
@@ -148,7 +145,7 @@ Results file: {results_file}
 Report file: {report_file}
 """
     
-    with open('results/table1_identification.txt', 'w') as f:
+    with open('Documentation/results/table1_identification.txt', 'w') as f:
         f.write(table_content)
     
     # 4. Save console output to file as well to results/simshadow_output_*.txt
@@ -216,7 +213,7 @@ def main():
             logging.info(f"   {platform_name.upper()}: Executing quantum circuit measurements...")
             
             # Get test states and observables
-            from simshadow.core.shadow_tomography import create_pauli_observables, create_test_states
+            # from simshadow import create_pauli_observables, create_test_states
             
             test_states = create_test_states(n_qubits=2)
             observables = create_pauli_observables(n_qubits=2)

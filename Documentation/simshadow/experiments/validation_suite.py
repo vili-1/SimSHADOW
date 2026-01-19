@@ -11,17 +11,17 @@ from typing import List, Dict, Tuple, Optional
 from tqdm import tqdm
 import pandas as pd
 
-from ..core.shadow_tomography import (
+from simshadow.core.shadow_tomography import (
     create_test_states, create_pauli_observables, 
     QuantumState, PauliObservable
 )
-from ..core.noise_models import (
+from simshadow.core.noise_models import (
     NoiseChannelFactory, DepolarizingChannel, 
     AmplitudeDampingChannel, PhaseDampingChannel
 )
-from ..core.fingerprint import FingerprintGenerator, NoiseFingerprint
-from ..platforms.qiskit_platform import QiskitPlatform
-from ..platforms.cirq_platform import CirqPlatform
+from simshadow.core.fingerprint import FingerprintGenerator, NoiseFingerprint
+from simshadow.platforms.qiskit_platform import QiskitPlatform
+from simshadow.platforms.cirq_platform import CirqPlatform
 
 
 class ValidationSuite:

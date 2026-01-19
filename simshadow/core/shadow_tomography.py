@@ -4,9 +4,9 @@ Classical Shadow Tomography implementation for quantum state characterisation.
 Based on Huang et al. "Predicting Many Properties of a Quantum System from Very Few Measurements"
 """
 
+from typing import List, Dict, Optional, Tuple
+
 import numpy as np
-from typing import List, Dict, Callable, Optional, Tuple
-from abc import ABC, abstractmethod
 
 
 class QuantumState:

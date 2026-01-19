@@ -7,9 +7,10 @@ Implements the main noise channels tested in the SimSHADOW paper:
 - Phase damping channels
 """
 
-import numpy as np
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional
+from typing import Dict, Any
+
+import numpy as np
 
 
 class NoiseChannel(ABC):

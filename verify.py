@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-import json
 import glob
+import json
 import os
-import sys
+
 
 def main() -> int:
-    json_paths = sorted(glob.glob(os.path.join('results', 'simshadow_results_*.json')))
+    json_paths = sorted(glob.glob(os.path.join('Documentation/results', 'simshadow_results_*.json')))
     if not json_paths:
         print('No result JSON files found in results/. Run `make full` to regenerate.')
         # Continue with figure checks
@@ -29,7 +29,7 @@ def main() -> int:
     # check figures used in the paper (Figure 2 and Figure 3 labels)
     # filenames: figure2_fingerprints.pdf (Figure 2), figure3_scaling.pdf (Figure 3 in paper)
     figs = ['figure2_fingerprints.pdf','figure3_scaling.pdf']
-    miss = [f for f in figs if not os.path.exists(os.path.join('figures', f))]
+    miss = [f for f in figs if not os.path.exists(os.path.join('Documentation/figures', f))]
     if miss:
         print('Missing figures:', ', '.join(miss))
         ok = False

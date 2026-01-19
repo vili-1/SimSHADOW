@@ -6,10 +6,7 @@ Generates the figures described in the paper for publication-quality plots.
 
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
-from matplotlib.backends.backend_pdf import PdfPages
-from typing import Dict, List, Tuple, Optional
-import pandas as pd
+from typing import Dict, List, Tuple
 
 
 class FingerprintVisualizer:
@@ -398,13 +395,12 @@ Overall Average            | 76.7%       | 49.1%     | 48.8%     | 49.0%
         Uses real experimental data with 36 observables and 9 states.
         """
         import matplotlib.gridspec as gridspec
-        from matplotlib.colors import LinearSegmentedColormap
 
         # Load real experimental data
         exp_data = self.load_experimental_data()
         
         # Get state and observable names for labels
-        from simshadow.core.shadow_tomography import create_test_states, create_pauli_observables
+        from Documentation.simshadow import create_test_states, create_pauli_observables
         test_states = create_test_states(n_qubits=2)
         observables = create_pauli_observables(n_qubits=2)
         # Convert state names to math mode for proper rendering
