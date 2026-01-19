@@ -68,7 +68,7 @@ This will:
 **4. Generate figures from the latest results**
 
 ```bash
-python gen_figures.py 2>&1 | grep -v "UserWarning"
+python Documentation/gen_figures.py 2>&1 | grep -v "UserWarning"
 ```
 
 This creates:
@@ -81,7 +81,7 @@ To reproduce multiple (for e.g., three) independent runs:
 ```bash
 for i in 1 2 3; do
   python run_simshadow.py
-  python gen_figures.py 2>&1 | grep -v "UserWarning"
+  python Documentation/gen_figures.py 2>&1 | grep -v "UserWarning"
   cp figures/figure2_fingerprints.pdf figures/figure2_fingerprints_run${i}.pdf
 done
 ```
