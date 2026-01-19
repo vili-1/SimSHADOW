@@ -66,7 +66,10 @@ class QiskitPlatform:
         self.noise_model = noise_model
 
     def prepare_state_circuit(self, quantum_state: QuantumState) -> QuantumCircuit:
-        """Create Qiskit circuit to prepare the specified quantum state."""
+        """
+        Create Qiskit circuit to prepare the specified quantum state.
+        Internal function only.
+        """
         circuit = QuantumCircuit(self.n_qubits)
 
         # Initialise circuit to prepare the target state
@@ -106,6 +109,9 @@ class QiskitPlatform:
 
         Returns:
             Measurement outcome as bitstring
+
+        Called:
+            measure_pauli from shadow_tomography.py
         """
         # Prepare initial state
         circuit = self.prepare_state_circuit(quantum_state)
@@ -160,6 +166,9 @@ class QiskitPlatform:
 
         Returns:
             Estimated expectation value
+
+        Called:
+            main from run_simshadow.py
         """
         # Prepare state circuit
         circuit = self.prepare_state_circuit(quantum_state)
@@ -218,6 +227,7 @@ class QiskitPlatform:
 
         return expectation
 
+    ## WORKING VERSION OF IDEAL
     def get_ideal_expectation(self, quantum_state: QuantumState,
                             observable: PauliObservable) -> float:
         """Get ideal (noiseless) expectation value."""
