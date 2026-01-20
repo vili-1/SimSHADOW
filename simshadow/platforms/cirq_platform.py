@@ -106,6 +106,12 @@ class CirqPlatform:
             circuit.append(cirq.H(self.qubits[0]))
             for i in range(1, self.n_qubits):
                 circuit.append(cirq.CNOT(self.qubits[0], self.qubits[i]))
+
+        else:
+            raise ValueError(
+                "QuantumState.name must be valid. "
+                "Use 0, 1, +, - or GHZ only."
+            )
         
         return circuit
     
