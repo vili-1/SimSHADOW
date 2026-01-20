@@ -97,6 +97,12 @@ class QiskitPlatform:
             circuit.h(0)
             for i in range(1, self.n_qubits):
                 circuit.cx(0, i)
+
+        else:
+            raise ValueError(
+                "QuantumState.name must be valid. "
+                "Use 0, 1, +, - or GHZ only."
+            )
                 
         return circuit
 
