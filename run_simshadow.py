@@ -236,8 +236,6 @@ def main():
             logging.info(f"   {platform_name.upper()}: Executing quantum circuit measurements...")
             
             # Get test states and observables
-            # from simshadow import create_pauli_observables, create_test_states
-            
             test_states = create_test_states(n_qubits=2)
             observables = create_pauli_observables(n_qubits=2)
             n_states = len(test_states) # 9
@@ -263,9 +261,6 @@ def main():
                     
                     # Get ideal expectation value (without noise) - compute analytically (valid if we leave I gates out of the evaluation, for now)
                     ideal_expectation = observable.expectation_value(state)
-                    #ideal_expectation = platform.get_ideal_expectation(
-                    #    state, observable, shots=shots_per_measurement
-                    #)
                     
                     # Fingerprint is the deviation: F = E_noisy - E_ideal
                     fingerprint[state_idx, obs_idx] = noisy_expectation - ideal_expectation
