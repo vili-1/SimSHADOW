@@ -136,8 +136,9 @@ class QiskitPlatform:
                 circuit.ry(-np.pi/2, i)  # Rotate Y by -π/2 to measure X
             elif pauli == 'Y':
                 circuit.rx(np.pi/2, i)   # Rotate X by π/2 to measure Y
-            elif pauli == 'Z' or pauli == 'I':
-                circuit.id(i)
+            # Leave this to the full paper, with a proper theorem. 
+            #elif pauli == 'Z' or pauli == 'I':
+            #    circuit.id(i)
             # Z measurement is in computational basis (no rotation needed)
             # Z and I: no rotation
 
@@ -158,12 +159,7 @@ class QiskitPlatform:
         result = job.result()
         counts = result.get_counts()
         bitstring = next(iter(counts))
-        outcome = bitstring[::-1]
-        #print("counts:", counts)
-        #print("total shots:", sum(counts.values()))
-        #print("raw bitstring (Qiskit):", bitstring)
-        #print("reversed (qubit order 0..n-1):", bitstring[::-1])
-
+        outcome = bitstring[::-1] # Assume measurements applied to all qubits
         return outcome
 
     def compute_expectation_value(self,
@@ -193,8 +189,9 @@ class QiskitPlatform:
                 circuit.ry(-np.pi/2, i)
             elif pauli == 'Y':
                 circuit.rx(np.pi/2, i)
-            elif pauli == 'Z' or pauli == 'I':
-                circuit.id(i)
+            # Leave this to the full paper, with a proper theorem. 
+            #elif pauli == 'Z' or pauli == 'I':
+            #    circuit.id(i)
 
         # Add measurements
         circuit.measure_all()
@@ -223,8 +220,6 @@ class QiskitPlatform:
         total_shots = sum(counts.values())
 
         for bitstring, count in counts.items():
-            bitstring = bitstring[::-1]   # FIX QISKIT ODD REPRESENTATION!
-
             # Compute eigenvalue as product of individual qubit eigenvalues
             eigenvalue = 1.0
             for i, pauli in enumerate(observable.pauli_string):
@@ -233,7 +228,7 @@ class QiskitPlatform:
                     continue
                 else:
                     # After rotation to Pauli basis, |0⟩ → +1, |1⟩ → -1
-                    bit = int(bitstring[i])
+                    bit = int(bitstring[-1 - i])
                     qubit_eigenvalue = 1.0 if bit == 0 else -1.0
                     eigenvalue *= qubit_eigenvalue
 
