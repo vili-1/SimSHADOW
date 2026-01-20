@@ -143,8 +143,9 @@ class CirqPlatform:
                 circuit.append(cirq.ry(-np.pi/2)(self.qubits[i]))
             elif pauli == 'Y':
                 circuit.append(cirq.rx(np.pi/2)(self.qubits[i]))
-            elif pauli == 'I' or pauli == 'Z':
-                circuit.append(cirq.I(self.qubits[i]))
+            # Leave this to the full paper, with a proper theorem.    
+            #elif pauli == 'I' or pauli == 'Z':
+            #    circuit.append(cirq.I(self.qubits[i]))
             # Z measurement is in computational basis (no rotation needed)
         
         # Add noise if configured
@@ -193,8 +194,9 @@ class CirqPlatform:
                 circuit.append(cirq.ry(-np.pi/2)(self.qubits[i]))
             elif pauli == 'Y':
                 circuit.append(cirq.rx(np.pi/2)(self.qubits[i]))
-            elif pauli == 'I' or pauli == 'Z':
-                circuit.append(cirq.I(self.qubits[i]))
+            # Leave this to the full paper, with a proper theorem.     
+            #elif pauli == 'I' or pauli == 'Z':
+            #    circuit.append(cirq.I(self.qubits[i]))
 
         # Add noise if configured
         if self.current_noise_channel:
@@ -212,7 +214,6 @@ class CirqPlatform:
         # After rotating to measurement basis: |0⟩ → +1, |1⟩ → -1
         # For identity (I): eigenvalue is always +1
         expectation = 0.0
-        
         for shot in range(shots):
             # Get measurement outcome for this shot
             outcome_bits = []
