@@ -261,11 +261,11 @@ def main():
                         state, observable, shots=shots_per_measurement
                     )
                     
-                    # Get ideal expectation value (without noise) - compute analytically
-                    # ideal_expectation = observable.expectation_value(state) ==> invalid returns only 0 and 0.999999...
-                    ideal_expectation = platform.get_ideal_expectation(
-                        state, observable, shots=shots_per_measurement
-                    )
+                    # Get ideal expectation value (without noise) - compute analytically (valid if we leave I gates out of the evaluation, for now)
+                    ideal_expectation = observable.expectation_value(state) ==> invalid returns only 0 and 0.999999...
+                    #ideal_expectation = platform.get_ideal_expectation(
+                    #    state, observable, shots=shots_per_measurement
+                    #)
                     
                     # Fingerprint is the deviation: F = E_noisy - E_ideal
                     fingerprint[state_idx, obs_idx] = noisy_expectation - ideal_expectation
