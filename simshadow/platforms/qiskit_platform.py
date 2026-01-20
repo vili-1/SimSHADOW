@@ -64,6 +64,13 @@ class QiskitPlatform:
             # Apply to all single-qubit gates
             noise_model.add_all_qubit_quantum_error(error_1q, ['id', 'u1', 'u2', 'u3', 'h', 'x', 'y', 'z'])
 
+        else:
+            raise ValueError(
+                "NoiseModel.name must be valid. ",
+                noise_channel.name,
+                "Use DepolarizingChannel, AmplitudeDampingChannel, or PhaseDampingChannel"
+            )
+
         self.noise_model = noise_model
 
     def prepare_state_circuit(self, quantum_state: QuantumState) -> QuantumCircuit:
