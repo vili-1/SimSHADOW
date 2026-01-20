@@ -92,7 +92,7 @@ class QiskitPlatform:
                     circuit.z(i)
                 # '0' and '1' are handled above or left as |0⟩
 
-        elif "GHZ" in quantum_state.name:
+        elif "GHZ" in quantum_state.name or "Φ" in quantum_state.name:
             # GHZ state preparation
             circuit.h(0)
             for i in range(1, self.n_qubits):
