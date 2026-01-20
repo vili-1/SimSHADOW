@@ -27,6 +27,7 @@ sudo apt update
 pip install qiskit_qasm3_import
 pip install --quiet ply
 pip install -e .
+chmod 777 scripts/generate_n_fingerprints.sh
 ```
 At this point, all requirements and SimShadow are installed.
 
