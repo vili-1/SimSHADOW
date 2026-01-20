@@ -361,15 +361,31 @@ def create_pauli_observables(n_qubits: int = 2) -> List[PauliObservable]:
     """
     observables = []
     
-    if n_qubits == 2:
+    if n_qubits == 1:
+        one_qubit_paulis = ['X', 'Y', 'Z']
+        for pauli in one_qubit_paulis:
+            observables.append(PauliObservable(pauli))
+            
+    elif n_qubits == 2:
         # Two-qubit Pauli observables
         two_qubit_paulis = ['XX', 'XY', 'XZ', 'YX', 'YY', 'YZ', 'ZX', 'ZY', 'ZZ']
         for pauli in two_qubit_paulis:
             observables.append(PauliObservable(pauli))
-        
+
+        # Leave it to full paper with a proper theorem around I and no ops.
         # Single-qubit observables with identity
-        single_qubit_paulis = ['XI', 'IX', 'YI', 'IY', 'ZI', 'IZ']
-        for pauli in single_qubit_paulis:
+        #single_qubit_paulis = ['XI', 'IX', 'YI', 'IY', 'ZI', 'IZ']
+        #for pauli in single_qubit_paulis:
+        #    observables.append(PauliObservable(pauli))
+
+    elif n_qubits == 3:
+        three_qubit_paulis = ["XXX", "XXY", "XXZ", "XYX", "XYY", "XYZ", "XZX", "XZY", "XZZ", 
+                              "YXX", "YXY", "YXZ", "YYX", "YYY", "YYZ", "YZX", "YZY", "YZZ",
+                              "ZXX", "ZXY", "ZXZ", "ZYX", "ZYY", "ZYZ", "ZZX", "ZZY", "ZZZ"]
+        for pauli in three_qubit_paulis:
             observables.append(PauliObservable(pauli))
-    
+            
+    else:
+        raise ValueError("SimShadow supports currently up to 3 paulis combinations.")
+        
     return observables 
