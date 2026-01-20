@@ -73,6 +73,11 @@ class CirqPlatform:
                     for qubit in operation.qubits:
                         noise_op = cirq.phase_damp(gamma=self.current_noise_channel.lambda_param).on(qubit)
                         noisy_circuit.append(noise_op, strategy=InsertStrategy.INLINE)
+                else:
+                    raise ValueError(
+                        "NoiseModel.name must be valid. ",
+                        "Use DepolarizingChannel, AmplitudeDampingChannel, or PhaseDampingChannel"
+                    )
         
         return noisy_circuit
     
