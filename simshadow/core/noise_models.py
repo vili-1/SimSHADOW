@@ -6,12 +6,9 @@ Implements the main noise channels tested in the SimSHADOW paper:
 - Amplitude damping channels  
 - Phase damping channels
 """
-
+import numpy as np
 from abc import ABC, abstractmethod
 from typing import Dict, Any
-
-import numpy as np
-
 
 class NoiseChannel(ABC):
     """Abstract base class for quantum noise channels."""
@@ -20,7 +17,6 @@ class NoiseChannel(ABC):
         self.parameter = parameter
         self.name = name
         
-
 class DepolarizingChannel(NoiseChannel):
     """
     Depolarizing noise channel: Λ(ρ) = (1-p)ρ + p(I/d)
@@ -66,24 +62,3 @@ class NoiseChannelFactory:
             return PhaseDampingChannel(parameter)
         else:
             raise ValueError(f"Unknown noise type: {noise_type}")
-    
-    @staticmethod
-    def get_test_parameters(noise_type: str) -> list:
-        """Get standard test parameters for each noise type."""
-        if noise_type.lower() == 'depolarizing':
-            return [0.01, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30]
-        elif noise_type.lower() == 'amplitude_damping':
-            return [0.01, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30]
-        elif noise_type.lower() == 'phase_damping':
-            return [0.01, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30]
-        else:
-            raise ValueError(f"Unknown noise type: {noise_type}")
-
-
-def create_noise_channel_suite() -> Dict[str, list]:
-    """Create comprehensive noise channel test suite."""
-    return {
-        'depolarizing': [DepolarizingChannel(p) for p in [0.01, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30]],
-        'amplitude_damping': [AmplitudeDampingChannel(g) for g in [0.01, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30]],
-        'phase_damping': [PhaseDampingChannel(l) for l in [0.01, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30]]
-    } 
