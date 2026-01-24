@@ -421,9 +421,13 @@ def main():
     }
     
     # Save all outputs comprehensively
-    if not debug:
+    if debug:
         logging.info("\nSaving all experimental outputs...")
         results_file, report_file = save_all_outputs(experiment_data, log_file, output_file, timestamp)
+    else:
+        logging.info("\nSkipping saving experimental outputs (use --debug to enable).")
+        results_file = None
+        report_file = None
     
     # Final comprehensive summary
     logging.info("\n" + "=" * 70)
