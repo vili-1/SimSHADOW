@@ -76,6 +76,7 @@ def setup_logging(debug: bool):
     
     return log_file, output_file, timestamp
 
+######################### DEBUG LOGS ###################################
 def save_all_outputs(experiment_data, log_file, output_file, timestamp):
     """Save outputs every time the experiment runs."""
     
@@ -187,6 +188,10 @@ Report file: {report_file}
     logging.info(f"   Updated Table 1: results/table1_identification.txt")
     
     return results_file, report_file
+######################### END DEBUG LOGS ###############################
+
+
+######################### MAIN LOGIC ###################################
 
 def main():
     """Execute comprehensive SimSHADOW validation with complete output logging."""
