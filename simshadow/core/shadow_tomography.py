@@ -342,7 +342,7 @@ def create_test_states(n_qubits: int = 2) -> List[QuantumState]:
             test_states.append(QuantumState.computational_basis_state(bitstring))
         
         # Superposition states
-        superposition_patterns = ['+0', '-0', '0+', '0-']
+        superposition_patterns = ['+0', '-0', '0+', '0-', '+1', '-1', '1+', '1-']
         for pattern in superposition_patterns:
             test_states.append(QuantumState.superposition_state(list(pattern)))
         
