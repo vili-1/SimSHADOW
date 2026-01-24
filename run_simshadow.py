@@ -36,15 +36,17 @@ Path("Documentation/results").mkdir(exist_ok=True)
 Path("logs").mkdir(exist_ok=True)
 
 ######################### DEBUG LOGS ###################################
-def save_all_outputs(experiment_data, log_file, output_file, timestamp):
+def save_all_outputs(experiment_data, log_file, output_file, timestamp, debug):
     """Save outputs every time the experiment runs."""
 
     # 1. Save JSON results for programmatic access
     results_file = f"results/simshadow_results_{timestamp}.json"
     with open(results_file, 'w') as f:
         json.dump(experiment_data, f, indent=2)
-    config = experiment_data['experimental_configuration']
-    # 2. Save detailed text report for human reading
+    if not debug
+        return
+    
+    # 2. Save a detailed text report for human reading
     report_file = f"results/simshadow_report_{timestamp}.txt"
     with open(report_file, 'w') as f:
         f.write("SimSHADOW: Quantum Circuit Validation Report\n")
@@ -421,13 +423,13 @@ def main():
     }
     
     # Save all outputs comprehensively
+    results_file = None
+    report_file = None
     if debug:
         logging.info("\nSaving all experimental outputs...")
-        results_file, report_file = save_all_outputs(experiment_data, log_file, output_file, timestamp)
     else:
         logging.info("\nSkipping saving experimental outputs (use --debug to enable).")
-        results_file = None
-        report_file = None
+    results_file, report_file = save_all_outputs(experiment_data, log_file, output_file, timestamp, debug)
     
     # Final comprehensive summary
     logging.info("\n" + "=" * 70)
