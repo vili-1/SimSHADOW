@@ -38,12 +38,12 @@ Path("logs").mkdir(exist_ok=True)
 ######################### DEBUG LOGS ###################################
 def save_all_outputs(experiment_data, log_file, output_file, timestamp):
     """Save outputs every time the experiment runs."""
-    
+
     # 1. Save JSON results for programmatic access
     results_file = f"results/simshadow_results_{timestamp}.json"
     with open(results_file, 'w') as f:
         json.dump(experiment_data, f, indent=2)
-    
+    config = experiment_data['experimental_configuration']
     # 2. Save detailed text report for human reading
     report_file = f"results/simshadow_report_{timestamp}.txt"
     with open(report_file, 'w') as f:
@@ -51,16 +51,16 @@ def save_all_outputs(experiment_data, log_file, output_file, timestamp):
         f.write("=" * 70 + "\n\n")
         f.write(f"Experiment Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write(f"Log File: {log_file}\n\n")
-        
+
         f.write("EXPERIMENTAL SCALE:\n")
         f.write(f"* Total measurements: {experiment_data['execution_stats']['total_measurements']:,}\n")
         f.write(f"* Total quantum shots: {experiment_data['execution_stats']['total_shots']:,}\n")
         f.write(f"* Total execution time: {experiment_data['execution_stats']['total_time']:.1f} seconds\n")
         f.write(f"* Method: Direct measurement in each observable's basis\n")
-        f.write(f"* States tested: 9 (computational basis, superposition, GHZ)\n")
-        f.write(f"* Observables per state: 15 (Pauli operators)\n")
-        f.write(f"* Shots per measurement: 10000\n")
-        f.write(f"* Noise configurations: 3 (depolarizing, amplitude damping, phase damping)\n\n")
+        f.write(f"* States tested: {experiment_data['experimental_configuration']['states_tested']} (computational basis, superposition, GHZ)\n")
+        f.write(f"* Observables per state: {experiment_data['experimental_configuration']['observables_per_state']} (Pauli operators)\n")
+        f.write(f"* Shots per measurement: {experiment_data['experimental_configuration']['shots_per_measurement']}\n")
+        f.write(f"* Noise configurations: {experiment_data['experimental_configuration']['noise_configurations']} (depolarizing, amplitude damping, phase damping)\n\n")
         
         f.write("PLATFORM PERFORMANCE ANALYSIS:\n")
         f.write(f"* Qiskit AerSimulator:\n")
