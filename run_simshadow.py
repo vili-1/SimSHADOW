@@ -44,7 +44,7 @@ def save_all_outputs(experiment_data, log_file, output_file, timestamp, debug):
     with open(results_file, 'w') as f:
         json.dump(experiment_data, f, indent=2)
     if not debug
-        return
+        return results_file, None
     
     # 2. Save a detailed text report for human reading
     report_file = f"results/simshadow_report_{timestamp}.txt"
