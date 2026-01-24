@@ -223,6 +223,9 @@ def main():
     logging.info("\nExecuting real quantum circuit measurements...")
     
     # Execute experiments for each noise configuration
+    n_noise_configs = len(noise_configs)
+    n_states = 0      # Init inside the loop, no need before
+    n_observables = 0 # Init inside the loop, no need before
     for noise_name, noise_channel in noise_configs:
         logging.info(f"\nTesting {noise_name} noise (parameter={noise_channel.parameter:.3f})")
         
@@ -369,23 +372,25 @@ def main():
             'performance_ratio': timing_data['cirq']['shots_per_sec'] / timing_data['qiskit']['shots_per_sec']
         },
         'experimental_configuration': {
-            'states_tested': 9,
-            'observables_per_state': 15,
-            'noise_configurations': 3,
-            'shots_per_measurement': 10000,
+            'n_qubits': 2,
+            'states_tested': n_states,
+            'observables_per_state': n_observables,
+            'noise_configurations': n_noise_configs,
+            'shots_per_measurement': shots_per_measurement,
+            'measurements_per_noise_config': n_states * n_observables,
             'method': 'direct_measurement',  # Direct measurement in each observable's basis
             'platforms': ['qiskit', 'cirq']
         },
         'fingerprint_data': {
             'qiskit': {
-                'depolarizing': all_fingerprints['qiskit'].get('depolarizing', np.zeros((9, 15))).tolist(),
-                'amplitude_damping': all_fingerprints['qiskit'].get('amplitude_damping', np.zeros((9, 15))).tolist(),
-                'phase_damping': all_fingerprints['qiskit'].get('phase_damping', np.zeros((9, 15))).tolist()
+                'depolarizing': all_fingerprints['qiskit'].get('depolarizing', np.zeros((n_states, n_observables))).tolist(),
+                'amplitude_damping': all_fingerprints['qiskit'].get('amplitude_damping', np.zeros((n_states, n_observables))).tolist(),
+                'phase_damping': all_fingerprints['qiskit'].get('phase_damping', np.zeros((n_states, n_observables))).tolist()
             },
             'cirq': {
-                'depolarizing': all_fingerprints['cirq'].get('depolarizing', np.zeros((9, 15))).tolist(),
-                'amplitude_damping': all_fingerprints['cirq'].get('amplitude_damping', np.zeros((9, 15))).tolist(),
-                'phase_damping': all_fingerprints['cirq'].get('phase_damping', np.zeros((9, 15))).tolist()
+                'depolarizing': all_fingerprints['cirq'].get('depolarizing', np.zeros((n_states, n_observables))).tolist(),
+                'amplitude_damping': all_fingerprints['cirq'].get('amplitude_damping', np.zeros((n_states, n_observables))).tolist(),
+                'phase_damping': all_fingerprints['cirq'].get('phase_damping', np.zeros((n_states, n_observables))).tolist()
             }
         },
         'analysis_results': {
@@ -423,13 +428,13 @@ def main():
     logging.info(f"\nExperimental summary:")
     logging.info(f"* Session ID: {timestamp}")
     logging.info(f"* Method: Direct measurement in each observable's basis")
-    logging.info(f"* Total measurements: {total_measurements:,} (9 states × 15 observables)")
-    logging.info(f"* Total quantum shots: {total_shots:,} ({total_measurements} measurements × 10000 shots)")
+    logging.info(f"* Total measurements: {total_measurements:,} ({n_states} states × {n_observables} observables)")
+    logging.info(f"* Total quantum shots: {total_shots:,} ({total_measurements} measurements × {shots_per_measurement} shots)")
     logging.info(f"* Total execution time: {total_time:.1f} seconds ({total_time/60:.1f} minutes)")
-    logging.info(f"* States tested: 9 (computational basis, superposition, GHZ)")
-    logging.info(f"* Observables tested: 15 per state (Pauli operators)")
-    logging.info(f"* Shots per measurement: 10000")
-    logging.info(f"* Noise configurations: 3 (depolarizing, amplitude damping, phase damping)")
+    logging.info(f"* States tested: {n_states} (computational basis, superposition, GHZ)")
+    logging.info(f"* Observables tested: {n_observables} per state (Pauli operators)")
+    logging.info(f"* Shots per measurement: {shots_per_measurement}")
+    logging.info(f"* Noise configurations: {n_noise_configs} (depolarizing, amplitude damping, phase damping)")
     
     logging.info(f"\nPlatform performance:")
     logging.info(f"* Qiskit AerSimulator: {timing_data['qiskit']['total_time']:.1f}s, {timing_data['qiskit']['measurements_per_sec']:.1f} measurements/sec")
