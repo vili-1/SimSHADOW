@@ -439,7 +439,7 @@ def main():
     logging.info(f"\nExperimental summary:")
     logging.info(f"* Session ID: {timestamp}")
     logging.info(f"* Method: Direct measurement in each observable's basis")
-    logging.info(f"* Total measurements: {total_measurements:,} ({n_states} states × {n_observables} observables)")
+    logging.info(f"* Total measurements: {total_measurements:,} ({n_states} states × {n_observables} observables × {n_noise_configs} noise configs × 2 platforms)")
     logging.info(f"* Total quantum shots: {total_shots:,} ({total_measurements} measurements × {shots_per_measurement} shots)")
     logging.info(f"* Total execution time: {total_time:.1f} seconds ({total_time/60:.1f} minutes)")
     logging.info(f"* States tested: {n_states} (computational basis, superposition, GHZ)")
@@ -458,7 +458,8 @@ def main():
     
     logging.info(f"\nAll outputs saved:")
     logging.info(f"* Structured results: {results_file}")
-    logging.info(f"* Human-readable report: {report_file}")
+    if debug:
+        logging.info(f"* Human-readable report: {report_file}")
     logging.info(f"* Detailed experiment log: {log_file}")
     logging.info(f"* Console output: {output_file}")
     logging.info(f"* Updated figures: figures/figure2-5_*.pdf")
