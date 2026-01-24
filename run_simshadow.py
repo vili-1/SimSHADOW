@@ -35,47 +35,6 @@ Path("Documentation/figures").mkdir(exist_ok=True)
 Path("Documentation/results").mkdir(exist_ok=True)
 Path("logs").mkdir(exist_ok=True)
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="SimSHADOW experiment runner")
-    parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="Enable debug mode: write logs, JSON results, reports, and tables to disk"
-    )
-    return parser.parse_args()
-    
-def setup_logging(debug: bool):
-    """Configure logging for every run."""
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file = f"logs/simshadow_experiment_{timestamp}.log"
-    print(f">> Start. Progress in logger ({timestamp}).")
-    
-    # Configure both file and console logging
-    logging.basicConfig(
-        level=logging.INFO,    
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.FileHandler(log_file),
-            logging.StreamHandler(sys.stdout)
-        ]
-    )
-
-    if not debug:
-        # Silence noisy third-party libraries
-        for noisy in [
-            "qiskit",
-            "qiskit.transpiler",
-            "qiskit.compiler",
-            "qiskit_aer",
-            "cirq"
-        ]:
-            logging.getLogger(noisy).setLevel(logging.WARNING)
-    
-    # Also save output to a text file for easy review
-    output_file = f"results/simshadow_output_{timestamp}.txt"
-    
-    return log_file, output_file, timestamp
-
 ######################### DEBUG LOGS ###################################
 def save_all_outputs(experiment_data, log_file, output_file, timestamp):
     """Save outputs every time the experiment runs."""
@@ -192,6 +151,46 @@ Report file: {report_file}
 
 
 ######################### MAIN LOGIC ###################################
+def parse_args():
+    parser = argparse.ArgumentParser(description="SimSHADOW experiment runner")
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug mode: write logs, JSON results, reports, and tables to disk"
+    )
+    return parser.parse_args()
+    
+def setup_logging(debug: bool):
+    """Configure logging for every run."""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = f"logs/simshadow_experiment_{timestamp}.log"
+    print(f">> Start. Progress in logger ({timestamp}).")
+    
+    # Configure both file and console logging
+    logging.basicConfig(
+        level=logging.INFO,    
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(log_file),
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
+
+    if not debug:
+        # Silence noisy third-party libraries
+        for noisy in [
+            "qiskit",
+            "qiskit.transpiler",
+            "qiskit.compiler",
+            "qiskit_aer",
+            "cirq"
+        ]:
+            logging.getLogger(noisy).setLevel(logging.WARNING)
+    
+    # Also save output to a text file for easy review
+    output_file = f"results/simshadow_output_{timestamp}.txt"
+    
+    return log_file, output_file, timestamp
 
 def main():
     """Execute comprehensive SimSHADOW validation with complete output logging."""
@@ -205,10 +204,13 @@ def main():
     logging.info(f"Experiment started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     logging.info(f"Session ID: {timestamp}")
     logging.info("All outputs will be automatically saved with comprehensive logging")
+
+    qubits_len = 2 # TODO: move into input parameters
+    shots_per_measurement = 10000
     
     # Tested platforms Configuration
-    qiskit_platform = QiskitPlatform(n_qubits=2)
-    cirq_platform = CirqPlatform(n_qubits=2)
+    qiskit_platform = QiskitPlatform(n_qubits=qubits_len)
+    cirq_platform = CirqPlatform(n_qubits=qubits_len)
     noise_configs = [
         ('depolarizing', DepolarizingChannel(0.1)),
         ('amplitude_damping', AmplitudeDampingChannel(0.1)),
@@ -222,15 +224,14 @@ def main():
     cross_platform_distances = {}
     all_fingerprints = {'qiskit': {}, 'cirq': {}}
     
-    total_measurements = 0
-    total_shots = 0
-    
     logging.info("\nExecuting real quantum circuit measurements...")
     
     # Execute experiments for each noise configuration
     n_noise_configs = len(noise_configs)
     n_states = 0      # Init inside the loop, no need before
     n_observables = 0 # Init inside the loop, no need before
+    total_measurements = 0
+    total_shots = 0
     for noise_name, noise_channel in noise_configs:
         logging.info(f"\nTesting {noise_name} noise (parameter={noise_channel.parameter:.3f})")
         
@@ -244,19 +245,18 @@ def main():
             logging.info(f"   {platform_name.upper()}: Executing quantum circuit measurements...")
             
             # Get test states and observables
-            test_states = create_test_states(n_qubits=2)
-            observables = create_pauli_observables(n_qubits=2)
-            n_states = len(test_states) # 9
-            n_observables = len(observables) # 15
+            test_states = create_test_states(n_qubits=qubits_len)
+            observables = create_pauli_observables(n_qubits=qubits_len)
+            n_states = len(test_states)
+            n_observables = len(observables)
             
             # Initialize fingerprint matrix: F[i, j] = E_noisy(state_i, obs_j) - E_ideal(state_i, obs_j)
             fingerprint = np.zeros((n_states, n_observables))
             
             # Direct measurement: measure each observable in its own basis
             # This is simpler and more efficient for a fixed set of observables
-            measurements = n_states * n_observables  # 9 × 15 = 135
-            shots_per_measurement = 10000
-            total_shots_this_platform = measurements * shots_per_measurement  # 135 × 10000
+            measurements = n_states * n_observables  
+            total_shots_this_platform = measurements * shots_per_measurement 
             
             # Compute fingerprint by measuring each state-observable pair directly
             measurement_count = 0
@@ -377,7 +377,7 @@ def main():
             'performance_ratio': timing_data['cirq']['shots_per_sec'] / timing_data['qiskit']['shots_per_sec']
         },
         'experimental_configuration': {
-            'n_qubits': 2,
+            'n_qubits': qubits_len,
             'states_tested': n_states,
             'observables_per_state': n_observables,
             'noise_configurations': n_noise_configs,
