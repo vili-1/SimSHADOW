@@ -81,9 +81,9 @@ class CirqPlatform:
         
         return noisy_circuit
     
-    def prepare_state_circuit(self, quantum_state: QuantumState) -> QuantumCircuit:
+    def prepare_state_circuit(self, quantum_state: QuantumState) -> cirq.Circuit:
         """
-        Create a Qiskit circuit to prepare the specified quantum state.
+        Create a Cirq circuit to prepare the specified quantum state.
         Internal function only.
         """
         # Here we will store the state!
