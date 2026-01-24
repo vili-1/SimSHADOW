@@ -81,43 +81,42 @@ class CirqPlatform:
         
         return noisy_circuit
     
-    def prepare_state_circuit(self, quantum_state: QuantumState) -> cirq.Circuit:
+    def prepare_state_circuit(self, quantum_state: QuantumState) -> QuantumCircuit:
         """
-        Create Cirq circuit to prepare the specified quantum state.
+        Create a Qiskit circuit to prepare the specified quantum state.
         Internal function only.
         """
+        # Here we will store the state!
         circuit = cirq.Circuit()
-        
-        # Initialise circuit to prepare the target state
-        if quantum_state.name.startswith("|0") or quantum_state.name.startswith("|1"):
-            # Computational basis states
-            bitstring = quantum_state.name[1:-1]  # Remove |⟩
-            for i, bit in enumerate(bitstring):
-                if bit == '1':
-                    circuit.append(cirq.X(self.qubits[i]))
-                    
-        elif "+" in quantum_state.name or "-" in quantum_state.name:
-            # Superposition states
-            state_desc = quantum_state.name[1:-1]  # Remove |⟩
-            for i, char in enumerate(state_desc):
-                if char == '+':
-                    circuit.append(cirq.H(self.qubits[i]))
-                elif char == '-':
-                    circuit.append([cirq.H(self.qubits[i]), cirq.Z(self.qubits[i])])
-                # '0' and '1' are handled above or left as |0⟩
-                    
-        elif "GHZ" in quantum_state.name or "Φ" in quantum_state.name:
+
+        if "GHZ" in quantum_state.name or "Φ" in quantum_state.name:
             # GHZ state preparation
             circuit.append(cirq.H(self.qubits[0]))
             for i in range(1, self.n_qubits):
                 circuit.append(cirq.CNOT(self.qubits[0], self.qubits[i]))
+        else: # We only have 0,1,+ and -
 
-        else:
-            raise ValueError(
-                "QuantumState.name must be valid. "
-                "Use 0, 1, +, - or GHZ only."
-            )
-        
+            # Explicitly keep only valid single-qubit symbols
+            bitstring = [ch for ch in quantum_state.name if ch in {'0', '1', '+', '-'}]
+            if len(bitstring) != self.n_qubits:
+                raise ValueError(
+                    f"State {quantum_state.name} does not match n_qubits={self.n_qubits}"
+                )
+
+            for i, ch in enumerate(bitstring):
+                if ch == '0': 
+                    pass
+                elif ch == '1':
+                    circuit.append(cirq.X(self.qubits[i]))
+                elif ch == '+':
+                    circuit.append(cirq.H(self.qubits[i]))
+                elif ch == '-':
+                    circuit.append([cirq.H(self.qubits[i]), cirq.Z(self.qubits[i])])
+                else:
+                    raise ValueError(
+                        "QuantumState.name must be valid. "
+                        "Use 0, 1, +, - or GHZ only."
+                    )
         return circuit
     
     def measure_pauli(self, quantum_state: QuantumState, pauli_string: str) -> str:
