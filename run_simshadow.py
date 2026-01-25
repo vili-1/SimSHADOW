@@ -160,6 +160,13 @@ def parse_args():
         action="store_true",
         help="Enable debug mode: write logs, JSON results, reports, and tables to disk"
     )
+    parser.add_argument(
+        "--noise-profile",
+        type=str,
+        default="default",
+        choices=["default", "low", "high", "ibm_boston"],
+        help="Noise profile to use: default|low|high|ibm_boston"
+    )
     return parser.parse_args()
     
 def setup_logging(debug: bool):
@@ -200,6 +207,7 @@ def main():
     # Setup logging and output saving
     args = parse_args()
     debug = args.debug
+    noise_profile = args.noise_profile 
     log_file, output_file, timestamp = setup_logging(debug)
     logging.info("SimSHADOW: Real Quantum Circuit Validation")
     logging.info("=" * 70)
@@ -213,11 +221,37 @@ def main():
     # Tested platforms Configuration
     qiskit_platform = QiskitPlatform(n_qubits=qubits_len)
     cirq_platform = CirqPlatform(n_qubits=qubits_len)
-    noise_configs = [
-        ('depolarizing', DepolarizingChannel(0.1)),
-        ('amplitude_damping', AmplitudeDampingChannel(0.1)),
-        ('phase_damping', PhaseDampingChannel(0.08))
-    ]
+
+    if noise_profile == "low":
+        noise_configs = [
+            ('depolarizing', DepolarizingChannel(5e-4)),
+            ('amplitude_damping', AmplitudeDampingChannel(1e-4)),
+            ('phase_damping', PhaseDampingChannel(2e-4))
+        ]
+        logging.info("Noise profile selected: LOW")
+    elif noise_profile == "high":
+        noise_configs = [
+            ('depolarizing', DepolarizingChannel(5e-3)),
+            ('amplitude_damping', AmplitudeDampingChannel(2e-3)),
+            ('phase_damping', PhaseDampingChannel(5e-3))
+        ]
+        logging.info("Noise profile selected: HIGH")  
+    elif noise_profile == "ibm_boston":
+        # IBM Boston 1Q-mapped values (SX error + T1/T2 mapped per ~50ns step)
+        noise_configs = [
+            ('depolarizing', DepolarizingChannel(2.824e-4)),
+            ('amplitude_damping', AmplitudeDampingChannel(1.98e-4)),
+            ('phase_damping', PhaseDampingChannel(1.54e-4))
+        ]
+        logging.info("Noise profile selected: IBM_BOSTON (1Q mapped)")
+    else:
+        # Original default settings
+        noise_configs = [
+            ('depolarizing', DepolarizingChannel(0.1)),
+            ('amplitude_damping', AmplitudeDampingChannel(0.1)),
+            ('phase_damping', PhaseDampingChannel(0.08))
+        ]
+        logging.info("Noise profile selected: DEFAULT (original)")
     
     # Track comprehensive timing and results
     start_time = time.time()
