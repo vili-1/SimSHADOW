@@ -244,6 +244,15 @@ def main():
             ('phase_damping', PhaseDampingChannel(1.54e-4))
         ]
         logging.info("Noise profile selected: IBM_BOSTON (1Q mapped)")
+    elif noise_profile == "quantinuum_h2":
+        # Quantinuum H2 (typical) from product data sheet
+        # 1Q gate infidelity ~3e-5, memory error depth-1 ~2e-4
+        noise_configs = [
+            ('depolarizing', DepolarizingChannel(6e-5)),        # ~2 * (1Q infidelity) proxy
+            ('amplitude_damping', AmplitudeDampingChannel(1e-5)), # small; trapped-ion relaxation not usually dominant
+            ('phase_damping', PhaseDampingChannel(2e-4))        # memory-error-as-dephasing proxy
+        ]
+        logging.info("Noise profile selected: QUANTINUUM_H2 (datasheet-typical)")
     else:
         # Original default settings
         noise_configs = [
