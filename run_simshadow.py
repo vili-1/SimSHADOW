@@ -164,7 +164,7 @@ def parse_args():
         "--noise-profile",
         type=str,
         default="default",
-        choices=["default", "low", "high", "ibm_boston"],
+        choices=["default", "low", "high", "ibm_boston", "quantinuum_h2"],
         help="Noise profile to use: default|low|high|ibm_boston"
     )
     return parser.parse_args()
