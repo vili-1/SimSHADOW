@@ -4,7 +4,7 @@ cd $simPath
 pathFull=`pwd`
 
 # Generate all the fingerprints using 1000 repeats
-choices=("default" "low" "high" "ibm_boston", "quantinuum_h2")
+choices=("default" "low" "high" "ibm_boston" "quantinuum_h2")
 
 for choice in "${choices[@]}"; do
     echo ">>> Generating fingerprints for choice: ${choice}"
