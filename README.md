@@ -42,7 +42,7 @@ TODO: Elena, please add the description. Elaborate more on the real ones, Quanti
 
 - 10000 quantum shots per measurement configuration
 - Direct measurement in each observable's eigenbasis (no full classical shadow reconstruction)
-- Ideal expectations computed analytically (no 10k-shot noiseless runs)
+- Ideal expectations computed analytically (from theory; no 10k-shot noiseless runs)
 
 ### Noise Finger Print Results
 
