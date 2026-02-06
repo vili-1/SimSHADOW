@@ -48,6 +48,37 @@ TODO: Elena, please add the description. Elaborate more on the real ones, Quanti
 
 #### Low:
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ee262a25-62c6-41f9-8b7d-2baa74b16ac0" width="250"/>
+  <img src="https://github.com/user-attachments/assets/a19c346c-b142-4fd1-9c78-bf41b148e5fe" width="250"/>
+  <img src="https://github.com/user-attachments/assets/9b421888-2a18-4bfa-be1a-3f289e2cac5b" width="250"/>
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ac292f05-d729-4baf-832a-4f594ed3b712" width="250"/>
+  <img src="https://github.com/user-attachments/assets/399e1575-0f1c-4818-a3e2-ea6669929a3e" width="250"/>
+  <img src="https://github.com/user-attachments/assets/ef05752a-4d2f-4155-90c7-061c6d42f20d" width="250"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/5f3cd0e9-a373-437f-9bc5-80d16d93a605" width="250"/>
+  <img src="https://github.com/user-attachments/assets/706cd7b6-be95-49bf-a6e6-663e8207fc46" width="250"/>
+  <img src="https://github.com/user-attachments/assets/61f6b22f-fb82-4008-997e-32ab505c100e" width="250"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/43bf1d3d-49a7-4bd9-982e-ea8d5eb7a539" width="250"/>
+  <img src="https://github.com/user-attachments/assets/837a8ab8-c257-4477-8c73-7598d303b9e9" width="250"/>
+  <img src="https://github.com/user-attachments/assets/840d5c3b-1c67-43c8-8001-c15a5e46157e" width="250"/>
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/68367837-8ae7-41b3-b5b1-14d7b9611819" width="250"/>
+  <img src="https://github.com/user-attachments/assets/50c815dd-20c5-4ad8-86c0-da78e237a393" width="250"/>
+  <img src="https://github.com/user-attachments/assets/b6ebfde5-01c3-49d2-9335-fb7faba7f3cb" width="250"/>
+</p>
+
+
+
+
 #### High:
 
 <p align="center">
