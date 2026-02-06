@@ -7,6 +7,74 @@ SimSHADOW provides systematic validation of quantum simulators through a lightwe
 
 This repository is the artifact for the paper *Toward Live Noise Fingerprinting in Quantum Software Engineering*.
 
+### Experimental Setup Documentation
+
+**Test States (13):**
+
+- 4 computational basis states: |00⟩, |01⟩, |10⟩, |11⟩
+- 8 superposition states: |+0⟩, |-0⟩, |0+⟩, |0-⟩, |+1⟩, |-1⟩, |1+⟩, |1-⟩  
+- 1 entangled state: |Φ⁺⟩ Bell state (for 2 qubits)
+
+**Observables (9 per state):**
+
+- 9 two-qubit Pauli observables: XX, XY, XZ, YX, YY, YZ, ZX, ZY, ZZ
+
+**Noise Types (3):**
+
+- Depolarizing noise
+- Amplitude damping 
+- Phase damping
+
+**Configurations (4) of Noise Types (3):**
+
+TODO: Elena, please add the description. Elaborate more on the real ones, Quantinuum and IBM
+- Low
+- High
+- Quantinuum H2
+- IBM Boston
+
+**Platforms (2):**
+
+- Qiskit AerSimulator
+- Cirq DensityMatrixSimulator
+
+**Measurement Protocol:**
+
+- 10000 quantum shots per measurement configuration
+- Direct measurement in each observable's eigenbasis (no full classical shadow reconstruction)
+- Ideal expectations computed analytically (no 10k-shot noiseless runs)
+
+### Noise Finger Print Results
+
+#### Low:
+
+#### High:
+
+#### Quantinuum H2:
+
+#### IBM Boston:
+
+---
+
+## How Fingerprints Are Generated
+
+### Core Concept
+
+A **noise fingerprint** is a quantitative signature that captures how noise affects quantum measurements. It's a matrix where each entry represents the deviation between what we observe with noise versus what we'd expect ideally.
+
+**Fingerprint Formula:**
+
+```
+F[state_i, observable_j] = E_noisy - E_ideal
+```
+
+Where:
+
+- `E_noisy` = expectation value measured with noise
+- `E_ideal` = expectation value computed without noise
+
+---
+
 ### Quick Start (local execution)
 
 **1. Requirments**
@@ -131,59 +199,7 @@ TODO: Vasilis, we need to fix the figures and results text/code.
 - Text reports with human-readable summaries
 - Log files with detailed execution traces
 
-### Experimental Setup Details
-
-**Test States (13):**
-
-- 4 computational basis states: |00⟩, |01⟩, |10⟩, |11⟩
-- 8 superposition states: |+0⟩, |-0⟩, |0+⟩, |0-⟩, |+1⟩, |-1⟩, |1+⟩, |1-⟩  
-- 1 entangled state: |Φ⁺⟩ Bell state (for 2 qubits)
-
-**Observables (9 per state):**
-
-- 9 two-qubit Pauli observables: XX, XY, XZ, YX, YY, YZ, ZX, ZY, ZZ
-
-**Noise Types (3):**
-
-- Depolarizing noise
-- Amplitude damping 
-- Phase damping
-
-**Configurations (4) of Noise Types (3):**
-
-TODO: Elena, please add the description. Elaborate more on the real ones, Quantinuum and IBM
-- Low
-- High
-- Quantinuum H2
-- IBM Boston
-
-**Platforms (2):**
-
-- Qiskit AerSimulator
-- Cirq DensityMatrixSimulator
-
-**Measurement Protocol:**
-
-- 10000 quantum shots per measurement configuration
-- Direct measurement in each observable's eigenbasis (no full classical shadow reconstruction)
-- Ideal expectations computed analytically (no 10k-shot noiseless runs)
-
-## How Fingerprints Are Generated
-
-### Core Concept
-
-A **noise fingerprint** is a quantitative signature that captures how noise affects quantum measurements. It's a matrix where each entry represents the deviation between what we observe with noise versus what we'd expect ideally.
-
-**Fingerprint Formula:**
-
-```
-F[state_i, observable_j] = E_noisy - E_ideal
-```
-
-Where:
-
-- `E_noisy` = expectation value measured with noise
-- `E_ideal` = expectation value computed without noise
+---
 
 ### Step-by-Step Process
 
@@ -216,7 +232,7 @@ Where:
 
 **3. Result:**
 
-- A 9×15 matrix per platform per noise type
+- A 13×9 matrix per platform per noise type
 - Each entry quantifies how noise affects that specific state-observable combination
 - Patterns in the matrix reveal noise characteristics and platform differences
 
