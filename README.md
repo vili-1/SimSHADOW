@@ -55,9 +55,9 @@ TODO: Elena, please add the description. Elaborate more on the real ones, Quanti
 #### IBM Boston:
 
 <p align="center" style="display:flex; gap:10px;">
-  <img src="https://github.com/user-attachments/assets/694f92dc-3122-4381-b95e-d289ac3482ac" width="300"/>
-  <img src="https://github.com/user-attachments/assets/c4cd381b-d10a-4f47-ab10-baea0ec3474f" width="300"/>
-  <img src="https://github.com/user-attachments/assets/576cfe1b-a00b-4248-bcf6-1f94368710b1" width="300"/>
+  <img src="https://github.com/user-attachments/assets/694f92dc-3122-4381-b95e-d289ac3482ac" width="250"/>
+  <img src="https://github.com/user-attachments/assets/c4cd381b-d10a-4f47-ab10-baea0ec3474f" width="250"/>
+  <img src="https://github.com/user-attachments/assets/576cfe1b-a00b-4248-bcf6-1f94368710b1" width="250"/>
 </p>
 
 ---
