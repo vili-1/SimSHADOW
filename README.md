@@ -54,11 +54,26 @@ TODO: Elena, please add the description. Elaborate more on the real ones, Quanti
 
 #### IBM Boston:
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9a9e0a14-de9a-482c-8394-0da0dd308f78" width="250"/>
+  <img src="https://github.com/user-attachments/assets/1f51bcf1-7862-4bb9-9497-7ed90e532f51" width="250"/>
+  <img src="https://github.com/user-attachments/assets/a211a5ad-facf-442c-a110-558dccf7827d" width="250"/>
+</p>
+
 <p align="center" style="display:flex; gap:10px;">
   <img src="https://github.com/user-attachments/assets/694f92dc-3122-4381-b95e-d289ac3482ac" width="250"/>
   <img src="https://github.com/user-attachments/assets/c4cd381b-d10a-4f47-ab10-baea0ec3474f" width="250"/>
   <img src="https://github.com/user-attachments/assets/576cfe1b-a00b-4248-bcf6-1f94368710b1" width="250"/>
 </p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7ac9fb0e-832f-45c8-a937-d08ab2514700" width="250"/>
+  <img src="https://github.com/user-attachments/assets/b1e4cafd-570b-47f0-91a5-daa58d6bdfc1" width="250"/>
+  <img src="https://github.com/user-attachments/assets/ac256ed8-eff9-457a-a4b5-f24a8c64f144" width="250"/>
+</p>
+
+
+
 
 ---
 
