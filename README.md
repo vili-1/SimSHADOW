@@ -60,8 +60,8 @@ TODO: Elena, please add the description. Elaborate more on the real ones, Quanti
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/5f3cd0e9-a373-437f-9bc5-80d16d93a605" width="250"/>
   <img src="https://github.com/user-attachments/assets/706cd7b6-be95-49bf-a6e6-663e8207fc46" width="250"/>
+  <img src="https://github.com/user-attachments/assets/5f3cd0e9-a373-437f-9bc5-80d16d93a605" width="250"/>
   <img src="https://github.com/user-attachments/assets/61f6b22f-fb82-4008-997e-32ab505c100e" width="250"/>
 </p>
 
@@ -93,8 +93,8 @@ TODO: Elena, please add the description. Elaborate more on the real ones, Quanti
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/4474a94c-c8b1-44b9-8136-ce1c4e1afee6" width="250"/>
   <img src="https://github.com/user-attachments/assets/5de069cf-692d-4d7a-86bd-9e898f3e077f" width="250"/>
+  <img src="https://github.com/user-attachments/assets/4474a94c-c8b1-44b9-8136-ce1c4e1afee6" width="250"/>
   <img src="https://github.com/user-attachments/assets/3b8a0de1-4d53-4618-9498-4f0d3ecd8e60" width="250"/>
 </p>
 
@@ -124,8 +124,8 @@ TODO: Elena, please add the description. Elaborate more on the real ones, Quanti
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/f2078fb4-3c31-4ade-b7a1-4b1ff8efef66" width="250"/>
   <img src="https://github.com/user-attachments/assets/7e84141d-c606-45ec-980d-8c8f6db576bb" width="250"/>
+  <img src="https://github.com/user-attachments/assets/f2078fb4-3c31-4ade-b7a1-4b1ff8efef66" width="250"/>
   <img src="https://github.com/user-attachments/assets/31e29409-218d-4d11-9507-7ebbc0ad15d7" width="250"/>
 </p>
 
@@ -155,9 +155,9 @@ TODO: Elena, please add the description. Elaborate more on the real ones, Quanti
 </p>
 
 
-<p align="center" style="display:flex; gap:10px;">
-  <img src="https://github.com/user-attachments/assets/694f92dc-3122-4381-b95e-d289ac3482ac" width="250"/>
+<p align="center">
   <img src="https://github.com/user-attachments/assets/c4cd381b-d10a-4f47-ab10-baea0ec3474f" width="250"/>
+  <img src="https://github.com/user-attachments/assets/694f92dc-3122-4381-b95e-d289ac3482ac" width="250"/>
   <img src="https://github.com/user-attachments/assets/576cfe1b-a00b-4248-bcf6-1f94368710b1" width="250"/>
 </p>
 
