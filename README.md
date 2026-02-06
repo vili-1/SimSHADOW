@@ -71,6 +71,8 @@ This will:
 
 **6. Generate figures from the latest results**
 
+TODO: Vasilis, can you fix 6-7 documentation?
+
 ```bash
 python Documentation/gen_figures.py 2>&1 | grep -v "UserWarning"
 ```
@@ -80,7 +82,7 @@ This creates:
 - `figures/figure2_fingerprints.pdf` (Figure 2 from the paper)
 - `figures/figure3_scaling.pdf` (Figure 3 from the paper)
 
-To reproduce multiple (for e.g., three) independent runs:
+To reproduce multiple (for, e.g., three) independent runs:
 
 ```bash
 for i in 1 2 3; do
@@ -187,17 +189,17 @@ Where:
 
 **1. Test Suite Design**
 
-- **9 quantum states**: 4 computational basis states (|00⟩, |01⟩, |10⟩, |11⟩), 4 superposition states (|+0⟩, |-0⟩, |0+⟩, |0-⟩), and 1 entangled state (|GHZ⟩)
-- **15 Pauli observables**: 9 two-qubit observables (XX, XY, XZ, YX, YY, YZ, ZX, ZY, ZZ) and 6 single-qubit observables (XI, IX, YI, IY, ZI, IZ)
+- **13 quantum states**: 4 computational basis states (|00⟩, |01⟩, |10⟩, |11⟩), 8 superposition states (|+0⟩, |-0⟩, |0+⟩, |0-⟩, |+1⟩, |-1⟩, |1+⟩, |1-⟩), and 1 entangled state (|GHZ⟩)
+- **9 Pauli observables**: 9 two-qubit observables (XX, XY, XZ, YX, YY, YZ, ZX, ZY, ZZ)
 
-**2. For Each State-Observable Pair (9 × 15 = 135 measurements per platform):**
+**2. For Each State-Observable Pair (13 × 9 = 117 measurements per platform):**
 
    **a) Noisy Measurement:**
    
    - Prepare the quantum state on the simulator
    - Apply the configured noise model (depolarizing, amplitude damping, or phase damping)
    - Rotate into the appropriate Pauli basis for the observable
-   - Measure the observable using 500 quantum shots
+   - Measure the observable using 10000 quantum shots
    - Compute expectation value: `E_noisy = ⟨ψ|O|ψ⟩` from measurement statistics, with eigenvalues in [-1, +1]
    
    **b) Ideal Expectation:**
@@ -223,18 +225,6 @@ Where:
 - Compute Frobenius distance between Qiskit and Cirq fingerprints
 - Large distances indicate implementation differences between platforms
 
-### Classification and Parameter Estimation
-
-After constructing the fingerprint matrices, SimSHADOW:
-
-- Extracts statistical features (mean deviation, standard deviation, Frobenius norm, sparsity, max deviation, variance pattern)
-- Applies **physics-informed decision rules** to classify the dominant noise type (depolarizing, amplitude damping, phase damping)
-- Uses **calibrated formulas** to estimate noise parameters:
-  - Depolarizing: $p \approx |\mu_F| / C_{\text{dep}}$ with $C_{\text{dep}} \approx 2.14$
-  - Amplitude damping: $\gamma \approx \tfrac{1}{2}(|\mu_F| / C_{\text{amp}} + \text{var}_{\text{pattern}}/0.001)$ with $C_{\text{amp}} \approx 1.44$
-  - Phase damping: $\lambda \approx (1 - s) \cdot C_{\text{phase}}$ with $C_{\text{phase}} \approx 0.094$
-
-These thresholds and constants are **tuned for the specific parameters used in the experiments** (0.05, 0.10, 0.08). They demonstrate feasibility (e.g., phase damping is correctly identified on both platforms and estimated within ~3% error), but they are **not universal**; applying the same rules to different parameter ranges would require re-calibration or automated adaptation (left as future work).
 
 ### Why This Works
 
@@ -242,6 +232,9 @@ These thresholds and constants are **tuned for the specific parameters used in t
 - Each platform implements noise models with slight variations
 - The fingerprint matrix captures these systematic differences quantitatively
 
+
+----
+TODO: Check from this point on:
 ### Example 1: Computational Basis State |00⟩ with XX Observable
 
 **State-Observable Pair:**
