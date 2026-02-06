@@ -61,8 +61,8 @@ python run_simshadow.py
 
 This will:
 
-- Generate **9** test quantum states
-- Utilise **15** observables
+- Generate **13** test quantum states
+- Utilise **9** observables
 - Perform **10000** shots per configuration
 - Generate fingerprint matrices for **2** platforms: Qiskit and Cirq
 - Compute cross-platform Frobenius distances between fingerprints
@@ -109,13 +109,17 @@ Expected outputs:
 
 **Experimental Data:**
 
-- **810 measurements** across 9 states, 15 observables, 3 noise types, 2 platforms
-- **405,000 quantum shots** with real Qiskit and Cirq execution
+- **2808 measurements each with 10000 shots** across 13 states, 9 observables, 3 noise types, 4 noise configurations, 2 platforms
+- **28,080,000 quantum shots** with real Qiskit and Cirq execution
 - **Cross-platform distances** (Frobenius norms between platforms)
 - **Performance metrics** (execution times, throughput)
-
+- **1000 Repeats** to achieve statistical confidance
+  
 **Figures:**
 
+Figures are the mean of 1000 repeats per noise type, noise configuration and platform (1000 repeats of 24 experiments)
+
+TODO: Vasilis, we need to fix the figures and results text/code.
 - **Figure 2**: Fingerprint visualizations showing noise patterns
 - **Figure 3**: Scaling comparison (SimSHADOW vs Process Tomography)
 
