@@ -7,6 +7,24 @@ SimSHADOW provides systematic validation of quantum simulators through a lightwe
 
 This repository is the artifact for the paper *Toward Live Noise Fingerprinting in Quantum Software Engineering*.
 
+## How Fingerprints Are Generated
+
+### Core Concept
+
+A **noise fingerprint** is a quantitative signature that captures how noise affects quantum measurements. It's a matrix where each entry represents the deviation between what we observe with noise versus what we'd expect ideally.
+
+**Fingerprint Formula:**
+
+```
+F[state_i, observable_j] = E_noisy - E_ideal
+```
+
+Where:
+
+- `E_noisy` = expectation value measured with noise
+- `E_ideal` = expectation value computed without noise
+
+
 ### Experimental Setup Documentation
 
 **Test States (13):**
@@ -173,26 +191,10 @@ TODO: Elena, please add the description. Elaborate more on the real ones, Quanti
   <img src="https://github.com/user-attachments/assets/c8523f24-8d5f-452d-8385-0569ed2822dc" width="250"/>
 </p>
 
----
-
-## How Fingerprints Are Generated
-
-### Core Concept
-
-A **noise fingerprint** is a quantitative signature that captures how noise affects quantum measurements. It's a matrix where each entry represents the deviation between what we observe with noise versus what we'd expect ideally.
-
-**Fingerprint Formula:**
-
-```
-F[state_i, observable_j] = E_noisy - E_ideal
-```
-
-Where:
-
-- `E_noisy` = expectation value measured with noise
-- `E_ideal` = expectation value computed without noise
 
 ---
+
+## Replication Package:
 
 ### Quick Start (local execution)
 
