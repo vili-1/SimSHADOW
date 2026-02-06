@@ -50,6 +50,35 @@ TODO: Elena, please add the description. Elaborate more on the real ones, Quanti
 
 #### High:
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0ff7a4c7-1f94-4787-b683-bb22efcc49c3" width="250"/>
+  <img src="https://github.com/user-attachments/assets/bf44e632-7240-437a-aece-4a8a837f6016" width="250"/>
+  <img src="https://github.com/user-attachments/assets/1a8341db-48c3-4415-9e78-e19aa83a9316" width="250"/>
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7bd2732e-1b9a-4b2e-b497-57b14d2dd1b8" width="250"/>
+  <img src="https://github.com/user-attachments/assets/9587f4f6-2b6e-4a0b-a075-114d7b2944bd" width="250"/>
+  <img src="https://github.com/user-attachments/assets/53fb37ae-0350-4433-b359-860b282805ad" width="250"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4474a94c-c8b1-44b9-8136-ce1c4e1afee6" width="250"/>
+  <img src="https://github.com/user-attachments/assets/5de069cf-692d-4d7a-86bd-9e898f3e077f" width="250"/>
+  <img src="https://github.com/user-attachments/assets/3b8a0de1-4d53-4618-9498-4f0d3ecd8e60" width="250"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/827ff25d-8855-4780-92f4-bb4c339196c5" width="250"/>
+  <img src="https://github.com/user-attachments/assets/117095bc-f1ad-4689-b103-466c9018d7cf" width="250"/>
+  <img src="https://github.com/user-attachments/assets/4f70a7f9-39d7-4f10-91b1-79d7e228f6e1" width="250"/>
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e3488cab-9c1a-4962-9a5b-08ad306796ae" width="250"/>
+  <img src="https://github.com/user-attachments/assets/43755da0-df71-45cc-965b-7a009dd1c7ad" width="250"/>
+  <img src="https://github.com/user-attachments/assets/f29f54d1-6ec4-461e-b56e-db647bbe9a7e" width="250"/>
+</p>
+
+
 #### Quantinuum H2:
 
 <p align="center">
