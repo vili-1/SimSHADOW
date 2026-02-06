@@ -52,6 +52,35 @@ TODO: Elena, please add the description. Elaborate more on the real ones, Quanti
 
 #### Quantinuum H2:
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/45a4a8f6-a5d7-4c6c-a889-0210b060bf25" width="250"/>
+  <img src="https://github.com/user-attachments/assets/49abb699-0753-4ef1-a627-774f85be0d29" width="250"/>
+  <img src="https://github.com/user-attachments/assets/84ee411c-6fe5-4397-8bcb-68f12542bb49" width="250"/>
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/27db3e51-2f66-4ea2-ba34-ede9ef3f8c0b" width="250"/>
+  <img src="https://github.com/user-attachments/assets/44c46519-ed70-42d7-a1cd-8209bb556662" width="250"/>
+  <img src="https://github.com/user-attachments/assets/bd084be0-cca1-4db1-9849-211fa0157c3a" width="250"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f2078fb4-3c31-4ade-b7a1-4b1ff8efef66" width="250"/>
+  <img src="https://github.com/user-attachments/assets/7e84141d-c606-45ec-980d-8c8f6db576bb" width="250"/>
+  <img src="https://github.com/user-attachments/assets/31e29409-218d-4d11-9507-7ebbc0ad15d7" width="250"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/734eb572-3e06-4352-b80a-4ec5c828a4ad" width="250"/>
+  <img src="https://github.com/user-attachments/assets/fa0bc544-b936-4d74-8137-2612f6127577" width="250"/>
+  <img src="https://github.com/user-attachments/assets/c9abef3d-ac92-4fbb-bec5-3031a51c68d0" width="250"/>
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/092bdab8-870e-467c-b71a-076bff06f2c2" width="250"/>
+  <img src="https://github.com/user-attachments/assets/0c04a477-10ce-42f5-8b0b-37cb980968f5" width="250"/>
+  <img src="https://github.com/user-attachments/assets/d00dbd8b-eeef-4564-80c3-4d62c6afaec5" width="250"/>
+</p>
+
+
 #### IBM Boston:
 
 <p align="center">
