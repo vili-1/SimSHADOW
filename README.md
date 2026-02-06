@@ -127,22 +127,29 @@ Expected outputs:
 
 ### Experimental Setup Details
 
-**Test States (9):**
+**Test States (13):**
 
 - 4 computational basis states: |00⟩, |01⟩, |10⟩, |11⟩
-- 4 superposition states: |+0⟩, |-0⟩, |0+⟩, |0-⟩  
+- 8 superposition states: |+0⟩, |-0⟩, |0+⟩, |0-⟩, |+1⟩, |-1⟩, |1+⟩, |1-⟩  
 - 1 entangled state: |Φ⁺⟩ Bell state (for 2 qubits)
 
-**Observables (15 per state):**
+**Observables (9 per state):**
 
 - 9 two-qubit Pauli observables: XX, XY, XZ, YX, YY, YZ, ZX, ZY, ZZ
-- 6 single-qubit observables: XI, IX, YI, IY, ZI, IZ
 
 **Noise Types (3):**
 
-- Depolarizing noise (parameter: 0.05)
-- Amplitude damping (parameter: 0.10)
-- Phase damping (parameter: 0.08)
+- Depolarizing noise
+- Amplitude damping 
+- Phase damping
+
+**Configurations (4) of Noise Types (3):**
+
+TODO: Elena, please add the description. Elaborate more on the real ones, Quantinuum and IBM
+- Low
+- High
+- Quantinuum H2
+- IBM Boston
 
 **Platforms (2):**
 
