@@ -39,17 +39,80 @@ Where:
 
 **Noise Types (3):**
 
-- Depolarizing noise
-- Amplitude damping 
-- Phase damping
+- **Depolarizing**: generic “random error” that shrinks the Bloch vector towards the origin (loss of both population + phase information).  
+  Qiskit Aer definition: $$E(\rho)=(1-\lambda)\rho + \lambda\,\mathrm{Tr}[\rho]\frac{I}{2^n}$$.  
+  Link: https://qiskit.github.io/qiskit-aer/stubs/qiskit_aer.noise.depolarizing_error.html
+
+- **Amplitude damping**: energy relaxation (T1-type), i.e. decay $$|1\rangle \rightarrow |0\rangle$$ with strength `param_amp`.  
+  Qiskit Aer Kraus form and parameter definition:  
+  Link: https://qiskit.github.io/qiskit-aer/stubs/qiskit_aer.noise.amplitude_damping_error.html
+
+- **Phase damping**: pure dephasing (T2-type), suppresses off-diagonal elements (coherences) while leaving populations largely unchanged; parameter `param_phase`.  
+  Qiskit Aer Kraus form and parameter definition:  
+  Link: https://qiskit.github.io/qiskit-aer/stubs/qiskit_aer.noise.phase_damping_error.html
 
 **Configurations (4) of Noise Types (3):**
 
-TODO: Elena, please add the description. Elaborate more on the real ones, Quantinuum and IBM
-- Low
-- High
-- Quantinuum H2
-- IBM Boston
+- Low Profile
+  - Goal: light noise; noticeable degradation without destroying results quickly.
+
+  ```python
+  if noise_profile == "low":
+      noise_configs = [
+          ('depolarizing', DepolarizingChannel(5e-4)),
+          ('amplitude_damping', AmplitudeDampingChannel(1e-4)),
+          ('phase_damping', PhaseDampingChannel(2e-4))
+      ]
+      logging.info("Noise profile selected: LOW")
+  ```
+- High Profile
+  - Goal: stress-test regime; still far below the extremely aggressive 0.1 defaults.
+  ```python
+  elif noise_profile == "high":
+    noise_configs = [
+        ('depolarizing', DepolarizingChannel(5e-3)),
+        ('amplitude_damping', AmplitudeDampingChannel(2e-3)),
+        ('phase_damping', PhaseDampingChannel(5e-3))
+    ]
+    logging.info("Noise profile selected: HIGH")
+  ```
+  IBM Aer noise simulation guide (context for “high” noise examples):
+  [https://quantum.cloud.ibm.com/docs/guides/simulate-with-qiskit-aer](https://quantum.cloud.ibm.com/docs/guides/simulate-with-qiskit-aer)
+
+- Quantinuum H2 Profile
+  - Anchors: typical 1Q gate infidelity ~3e-5; memory error at depth-1 ~2e-4 (used as dephasing proxy).
+  - Trapped-ion platforms don’t usually present T1/T2 in the same way as superconducting devices; this is an approximate mapping.
+  ```python
+  elif noise_profile == "quantinuum_h2":
+    # Quantinuum H2 (typical) from product data sheet
+    # 1Q gate infidelity ~3e-5, memory error depth-1 ~2e-4
+    noise_configs = [
+        ('depolarizing', DepolarizingChannel(6e-5)),          # ~2 * (1Q infidelity) proxy
+        ('amplitude_damping', AmplitudeDampingChannel(1e-5)), # small; relaxation not usually dominant proxy here
+        ('phase_damping', PhaseDampingChannel(2e-4))          # memory-error-as-dephasing proxy
+    ]
+    logging.info("Noise profile selected: QUANTINUUM_H2 (datasheet-typical)")
+  ```
+  
+  - [Quantinuum H2 product datasheet (PDF)](https://docs.quantinuum.com/systems/data_sheets/Quantinuum%20H2%20Product%20Data%20Sheet.pdf)
+
+  - [Quantinuum performance validation overview](https://docs.quantinuum.com/systems/user_guide/hardware_user_guide/performance_validation.html)
+
+
+- IBM Boston Profile
+  - Depolarizing parameter is set from a 1Q gate-error proxy (e.g., SX median error).
+  - Amplitude/phase damping are set from T1/T2 mapped per ~50 ns 1Q gate step.
+  ```python
+  elif noise_profile == "ibm_boston":
+    # IBM Boston 1Q-mapped values (SX error + T1/T2 mapped per ~50ns step)
+    noise_configs = [
+        ('depolarizing', DepolarizingChannel(2.824e-4)),
+        ('amplitude_damping', AmplitudeDampingChannel(1.98e-4)),
+        ('phase_damping', PhaseDampingChannel(1.54e-4))
+    ]
+    logging.info("Noise profile selected: IBM_BOSTON (1Q mapped)")
+  ```
+  - IBM guide (building/using device-like noise models): [https://quantum.cloud.ibm.com/docs/guides/build-noise-models](https://quantum.cloud.ibm.com/docs/guides/build-noise-models)
 
 **Platforms (2):**
 
