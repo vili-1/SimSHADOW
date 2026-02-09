@@ -127,7 +127,15 @@ Where:
 
 ### Noise Fingerprints' Results
 
-#### Low:
+Each figue states the configuration, split into low, high, IBM profiles etc. 
+The first 9 figures are the mean over 1000 repeats of each experiment. The next 9 figures (in Green) are the standard deviation.
+
+_Visualisation note._
+Heatmaps use a fixed colour scale in $[-0.002,0.002]$ for readability; values outside this range (e.g., $-0.003$) are clipped and shown at the extreme colour. 
+This prevents a small number of outliers from compressing the colour range and obscuring structure in the remaining entries.
+Clipping occurs only for the synthetic \emph{Low}/\emph{High} profiles; the IBM Boston and Quantinuum H2 results (our main focus) fall within the plotted range.
+
+#### Low: 
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/ee262a25-62c6-41f9-8b7d-2baa74b16ac0" width="250"/>
