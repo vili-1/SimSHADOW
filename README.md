@@ -1,6 +1,6 @@
-# SimSHADOW: Live Noise Fingerprinting in Quantum Software Engineering
+# SHADOWP: Live Noise Fingerprinting in Quantum Software Engineering
 
-SimSHADOW provides systematic validation of quantum simulators through a lightweight, shadow-inspired fingerprinting protocol, enabling efficient cross-platform comparison and noise characterisation without full state tomography.
+SHADOWP provides systematic validation of quantum simulators through a lightweight, shadow-inspired fingerprinting protocol, enabling efficient cross-platform comparison and noise characterisation without full state tomography.
 
 
 ## Artifact & Reproducibility
@@ -293,7 +293,7 @@ python -c "import qiskit, cirq; print('ok')"
 **2. Navigate to the artifact directory**
 
 ```bash
-cd ~/SimSHADOW_artifact
+cd ~/SHADOWP_artifact
 ```
 
 **3. Activate the experiment environment**
@@ -307,8 +307,8 @@ source .venv312/bin/activate
 If you prefer to create your own environment instead:
 
 ```bash
-python -m venv simshadow_env
-source simshadow_env/bin/activate  # On Windows: simshadow_env\Scripts\activate
+python -m venv SHADOWP_env
+source SHADOWP_env/bin/activate  # On Windows: SHADOWP_env\Scripts\activate
 
 pip install -r requirements.txt
 pip install -e .
@@ -321,7 +321,7 @@ Follow Sections 5--7 below to generate fresh data, create figures, and verify ou
 **5. Run the complete experiment (generate fresh data)**
 
 ```bash
-python run_simshadow.py
+python run_SHADOWP.py
 ```
 
 This will:
@@ -332,11 +332,11 @@ This will:
 - Generate fingerprint matrices for **2** platforms: Qiskit and Cirq
 - Compute cross-platform Frobenius distances between fingerprints
 - Run physics-informed noise channel classification and parameter estimation
-- Save timestamped results to `results/simshadow_results_*.json` and detailed logs to `logs/`
+- Save timestamped results to `results/SHADOWP_results_*.json` and detailed logs to `logs/`
 
 The New Idea/Vision Paper results repeated the steps above 1000 times to gain statistical confidence, as detailed here [Evaluation_NIER/README.md](Evaluation_NIER/README.md). We add here the parts relevant to EQ1 and EQ2.
 
-***5.1 EQ1 run_simshadow.py over many repeats***
+***5.1 EQ1 run_SHADOWP.py over many repeats***
 
 #### Execute
 From the root of the project run:
@@ -345,7 +345,7 @@ From the root of the project run:
 ```
 For example:
 ```
-nohup ./Evaluation_NIER/scripts_RQ1/generate_n_fingerprints.sh /users/kevenmen/SimSHADOW_artifact-main 1000 > all_16012026.log 2>&1 &
+nohup ./Evaluation_NIER/scripts_RQ1/generate_n_fingerprints.sh /users/kevenmen/SHADOWP_artifact-main 1000 > all_16012026.log 2>&1 &
 ```
 
 #### HeatMaps
@@ -356,7 +356,7 @@ python3 Evaluation_NIER/scripts_RQ1/generated_heatmap_presentaion.py
 We used this script for quick debugging and visualisation of the results. You will need to edit the path in the script. 
 **See Section 6 for the full automation for generating the paper's official figures.**
 
-***5.2 EQ2 Testing Aspects of SimShadow***
+***5.2 EQ2 Testing Aspects of SHADOWP***
 #### Get and Fix the Benchmarking
 Download a subset of benchmarks from its scalable benchmarks: [MQT Bench](https://www.cda.cit.tum.de/mqtbench/).
 
@@ -412,7 +412,7 @@ To regenerate data + figures for repeated runs:
 
 ```bash
 for i in 1 2 3; do
-  python run_simshadow.py
+  python run_SHADOWP.py
   python -m Documentation.gen_figures
   cp figures/figure2_fingerprints_IBM_QuantinuumH2.pdf figures/figure2_fingerprints_IBM_QuantinuumH2_run${i}.pdf
 done
@@ -423,9 +423,9 @@ done
 After running Sections 5 and 6, verify files exist:
 
 ```bash
-ls -1 results/simshadow_results_*.json | head -n 3
-ls -1 results/simshadow_report_*.txt | head -n 3
-ls -1 logs/simshadow_experiment_*.log | head -n 3
+ls -1 results/SHADOWP_results_*.json | head -n 3
+ls -1 results/SHADOWP_report_*.txt | head -n 3
+ls -1 logs/SHADOWP_experiment_*.log | head -n 3
 ls -1 figures/figure2_fingerprints_IBM.pdf
 ls -1 figures/figure2_fingerprints_IBM_QuantinuumH2.pdf
 ls -1 figures/figure3_scaling.pdf
@@ -433,9 +433,9 @@ ls -1 figures/figure3_scaling.pdf
 
 Expected artifacts:
 
-- `results/simshadow_results_*.json` (experiment outputs)
-- `results/simshadow_report_*.txt` (human-readable summaries)
-- `logs/simshadow_experiment_*.log` (execution logs)
+- `results/SHADOWP_results_*.json` (experiment outputs)
+- `results/SHADOWP_report_*.txt` (human-readable summaries)
+- `logs/SHADOWP_experiment_*.log` (execution logs)
 - `figures/figure2_fingerprints_IBM.pdf`
 - `figures/figure2_fingerprints_IBM_QuantinuumH2.pdf`
 - `figures/figure3_scaling.pdf`
@@ -451,9 +451,9 @@ python -m Documentation.report_frobenius_stats --ibm-runs /path/to/results-1000-
 
 **Experimental Data:**
 
-- `results/simshadow_results_*.json` (raw experiment outputs)
-- `results/simshadow_report_*.txt` (human-readable summaries)
-- `logs/simshadow_experiment_*.log` (execution logs)
+- `results/SHADOWP_results_*.json` (raw experiment outputs)
+- `results/SHADOWP_report_*.txt` (human-readable summaries)
+- `logs/SHADOWP_experiment_*.log` (execution logs)
 - Cross-platform metrics (including Frobenius distances) in result JSONs/reports
 - Optional analysis outputs (classification/parameter-estimation fields) included in result JSONs
 
