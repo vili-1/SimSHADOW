@@ -67,6 +67,7 @@ Where:
   ```
 - High Profile
   - Goal: stress-test regime; still far below the extremely aggressive 0.1 defaults.
+  
   ```python
   elif noise_profile == "high":
     noise_configs = [
@@ -76,12 +77,14 @@ Where:
     ]
     logging.info("Noise profile selected: HIGH")
   ```
+  
   IBM Aer noise simulation guide (context for “high” noise examples):
   [https://quantum.cloud.ibm.com/docs/guides/simulate-with-qiskit-aer](https://quantum.cloud.ibm.com/docs/guides/simulate-with-qiskit-aer)
 
 - Quantinuum H2 Profile
   - Anchors: typical 1Q gate infidelity ~3e-5; memory error at depth-1 ~2e-4 (used as dephasing proxy).
   - Trapped-ion platforms don’t usually present T1/T2 in the same way as superconducting devices; this is an approximate mapping.
+  
   ```python
   elif noise_profile == "quantinuum_h2":
     # Quantinuum H2 (typical) from product data sheet
@@ -102,6 +105,7 @@ Where:
 - IBM Boston Profile
   - Depolarizing parameter is set from a 1Q gate-error proxy (e.g., SX median error).
   - Amplitude/phase damping are set from T1/T2 mapped per ~50 ns 1Q gate step.
+  
   ```python
   elif noise_profile == "ibm_boston":
     # IBM Boston 1Q-mapped values (SX error + T1/T2 mapped per ~50ns step)
@@ -112,6 +116,7 @@ Where:
     ]
     logging.info("Noise profile selected: IBM_BOSTON (1Q mapped)")
   ```
+  
   - IBM guide (building/using device-like noise models): [https://quantum.cloud.ibm.com/docs/guides/build-noise-models](https://quantum.cloud.ibm.com/docs/guides/build-noise-models)
 
 **Platforms (2):**
@@ -311,7 +316,7 @@ pip install -e .
 
 **4. Reproduce Results**
 
-To reproduce the figures in the paper, follow the instructions in [scripts](https://github.com/vili-1/SimSHADOW_artifact/blob/main/scripts/README.md).
+Follow Sections 5--7 below to generate fresh data, create figures, and verify outputs.
 
 **5. Run the complete experiment (generate fresh data)**
 
@@ -331,59 +336,80 @@ This will:
 
 **6. Generate figures from the latest results**
 
-TODO: Vasilis, can you fix 6-7 documentation?
+Use the artifact plotting entrypoint:
 
 ```bash
-python Documentation/gen_figures.py 2>&1 | grep -v "UserWarning"
+python -m Documentation.gen_figures
 ```
 
-This creates:
+This generates:
 
-- `figures/figure2_fingerprints.pdf` (Figure 2 from the paper)
-- `figures/figure3_scaling.pdf` (Figure 3 from the paper)
+- `figures/figure2_fingerprints_IBM.pdf`
+- `figures/figure2_fingerprints_IBM_QuantinuumH2.pdf`
+- `figures/figure3_scaling.pdf`
 
-To reproduce multiple (for, e.g., three) independent runs:
+Notes:
+
+- Figure generation uses the profile means loaded by `Documentation/visualization/plotting.py`.
+- Preferred input is the aggregated 1000-run profile data for:
+  - IBM Boston
+  - Quantinuum H2
+
+
+To regenerate data + figures for repeated runs:
 
 ```bash
 for i in 1 2 3; do
   python run_simshadow.py
-  python Documentation/gen_figures.py 2>&1 | grep -v "UserWarning"
-  cp figures/figure2_fingerprints.pdf figures/figure2_fingerprints_run${i}.pdf
+  python -m Documentation.gen_figures
+  cp figures/figure2_fingerprints_IBM_QuantinuumH2.pdf figures/figure2_fingerprints_IBM_QuantinuumH2_run${i}.pdf
 done
 ```
 
 **7. Verify expected outputs**
 
+After running Sections 5 and 6, verify files exist:
+
 ```bash
-python verify.py
+ls -1 results/simshadow_results_*.json | head -n 3
+ls -1 results/simshadow_report_*.txt | head -n 3
+ls -1 logs/simshadow_experiment_*.log | head -n 3
+ls -1 figures/figure2_fingerprints_IBM.pdf
+ls -1 figures/figure2_fingerprints_IBM_QuantinuumH2.pdf
+ls -1 figures/figure3_scaling.pdf
 ```
 
-Expected outputs:
+Expected artifacts:
 
-- `results/simshadow_results_*.json` (experimental data)
+- `results/simshadow_results_*.json` (experiment outputs)
 - `results/simshadow_report_*.txt` (human-readable summaries)
-- `logs/simshadow_experiment_*.log` (detailed execution traces)
-- `results/table1_identification.txt`
-- `figures/figure2_fingerprints.pdf`
+- `logs/simshadow_experiment_*.log` (execution logs)
+- `figures/figure2_fingerprints_IBM.pdf`
+- `figures/figure2_fingerprints_IBM_QuantinuumH2.pdf`
 - `figures/figure3_scaling.pdf`
+- `figures/figure3_scaling.pdf`
+
+For the paper-reported distances and uncertainty as a standalone check, use:
+
+```bash
+python -m Documentation.report_frobenius_stats --ibm-runs /path/to/results-1000-ibm_boston --qh2-runs /path/to/results-1000-quantinuum_h2 --bootstrap 2000
+```
 
 ### What Gets Generated
 
 **Experimental Data:**
 
-- **2808 measurements each with 10000 shots** across 13 states, 9 observables, 3 noise types, 4 noise configurations, 2 platforms
-- **28,080,000 quantum shots** with real Qiskit and Cirq execution
-- **Cross-platform distances** (Frobenius norms between platforms)
-- **Performance metrics** (execution times, throughput)
-- **1000 Repeats** to achieve statistical confidance
-  
-**Figures:**
+- `results/simshadow_results_*.json` (raw experiment outputs)
+- `results/simshadow_report_*.txt` (human-readable summaries)
+- `logs/simshadow_experiment_*.log` (execution logs)
+- Cross-platform metrics (including Frobenius distances) in result JSONs/reports
+- Optional analysis outputs (classification/parameter-estimation fields) included in result JSONs
 
-Figures are the mean of 1000 repeats per noise type, noise configuration and platform (1000 repeats of 24 experiments)
+**Figures (from `python -m Documentation.gen_figures`):**
 
-TODO: Vasilis, we need to fix the figures and results text/code.
-- **Figure 2**: Fingerprint visualizations showing noise patterns
-- **Figure 3**: Scaling comparison (SimSHADOW vs Process Tomography)
+- `figures/figure2_fingerprints_IBM.pdf`
+- `figures/figure2_fingerprints_IBM_QuantinuumH2.pdf`
+- `figures/figure3_scaling.pdf`
 
 **Results:**
 
@@ -397,7 +423,7 @@ TODO: Vasilis, we need to fix the figures and results text/code.
 
 **1. Test Suite Design**
 
-- **13 quantum states**: 4 computational basis states (|00⟩, |01⟩, |10⟩, |11⟩), 8 superposition states (|+0⟩, |-0⟩, |0+⟩, |0-⟩, |+1⟩, |-1⟩, |1+⟩, |1-⟩), and 1 entangled state (|GHZ⟩)
+- **13 quantum states**: 4 computational basis states (|00⟩, |01⟩, |10⟩, |11⟩), 8 superposition states (|+0⟩, |-0⟩, |0+⟩, |0-⟩, |+1⟩, |-1⟩, |1+⟩, |1-⟩), and 1 entangled state (|Φ⁺⟩ for 2 qubits; GHZ for 3+ qubits).
 - **9 Pauli observables**: 9 two-qubit observables (XX, XY, XZ, YX, YY, YZ, ZX, ZY, ZZ)
 
 **2. For Each State-Observable Pair (13 × 9 = 117 measurements per platform):**
@@ -442,200 +468,50 @@ TODO: Vasilis, we need to fix the figures and results text/code.
 
 
 ----
-TODO: Check from this point on:
-### Example 1: Computational Basis State |00⟩ with XX Observable
 
-**State-Observable Pair:**
+## Validated current configuration and outputs
 
-- **State:** |00⟩ (computational basis state)
-- **Observable:** XX (two-qubit Pauli operator X ⊗ X)
-- **Matrix Position:** F[0, 0] in the fingerprint matrix
+The sections above describe the current reproducibility path. The canonical settings used by the
+artifact workflow are:
 
-**State Preparation:**
+- **13** reference states
+- **9** Pauli observables
+- **10,000** shots per state-observable measurement
+- **2** simulator ecosystems (Qiskit, Cirq)
+- **2** hardware-informed profiles (IBM Boston, Quantinuum H2)
+- **3** noise channels (depolarizing, amplitude damping, phase damping)
 
-- State vector: `[1, 0, 0, 0]` (normalized)
-- Circuit: No gates needed (qubits initialize to |0⟩)
+Fingerprint entries are defined as:
 
-**Observable:**
-
-- Operator: X ⊗ X
-- Matrix:
-  
-  ```
-  [[0  0  0  1]
-   [0  0  1  0]
-   [0  1  0  0]
-   [1  0  0  0]]
-  ```
-
-**Ideal Expectation Value (Noiseless):**
-
-- Computation: `E_ideal = ⟨00|XX|00⟩ = 0.000000`
-- Interpretation: For |00⟩, the XX expectation is 0 (no correlation)
-
-**Noisy Measurement Process:**
-
-1. Prepare |00⟩ on simulator
-2. Apply 5% depolarizing noise (after each gate)
-3. Rotate to X-basis: Apply `RY(-π/2)` to both qubits
-4. Measure both qubits in computational basis
-5. Execute 500 shots, collect bitstring statistics
-6. Compute expectation from measurement outcomes
-
-**Expectation Value Calculation:**
-
-```
-E = Σ (parity(bitstring) × count(bitstring)) / total_shots
+```text
+F[i, j] = E_noisy(state_i, observable_j) - E_ideal(state_i, observable_j)
 ```
 
-Where parity = +1 for even parity (00, 11), -1 for odd parity (01, 10)
+### Figure generation (current)
 
-**Fingerprint Computation:**
-
-```
-F[0, 0] = E_noisy - E_ideal
+```bash
+python -m Documentation.gen_figures
 ```
 
-**Actual Values from Experiment:**
+Expected figure outputs:
 
-- **Qiskit fingerprint:** F[0,0] = 0.029800
-- **Cirq fingerprint:** F[0,0] = 0.032000
-- **Cross-platform difference:** 0.002200
+- `figures/figure2_fingerprints_IBM.pdf`
+- `figures/figure2_fingerprints_IBM_QuantinuumH2.pdf`
+- `figures/figure3_scaling.pdf`
 
-**Physical Interpretation:**
+### Standalone Frobenius and bootstrap check
 
-- The ideal XX expectation for |00⟩ is 0
-- With 5% depolarizing noise, both platforms show small positive deviations (~0.03)
-- The difference (0.0022) reflects platform-specific noise implementation differences
-- This entry captures how depolarizing noise affects the |00⟩ state when measuring XX
+To reproduce paper-reported Frobenius distances and bootstrap uncertainty from run-level profile files:
 
-### Example 2: GHZ Entangled State with ZZ Observable
-
-**State-Observable Pair:**
-
-- **State:** |GHZ⟩ = (|00⟩ + |11⟩)/√2 (maximally entangled Bell state)
-- **Observable:** ZZ (two-qubit Pauli operator Z ⊗ Z)
-- **Matrix Position:** F[8, 8] in the fingerprint matrix
-
-**State Preparation:**
-
-- State vector: `[0.707, 0, 0, 0.707]` (normalised: 1/√2 for |00⟩ and |11⟩)
-- Preparation circuit:
-  ```
-  |0⟩ ────[H]───*─── |GHZ⟩
-  |0⟩ ────────[X]─── |GHZ⟩
-  ```
-  (H on qubit 0, then CNOT from 0→1)
-- This state is maximally entangled: measuring one qubit determines the other
-
-**Observable:**
-
-- Operator: Z ⊗ Z
-- Matrix:
-  ```
-  [[ 1  0  0  0]
-   [ 0 -1  0  0]
-   [ 0  0 -1  0]
-   [ 0  0  0  1]]
-  ```
-- Measures correlation: +1 if qubits are the same (|00⟩, |11⟩), -1 if different (|01⟩, |10⟩)
-
-**Ideal Expectation Value (Noiseless):**
-
-- Computation: `E_ideal = ⟨GHZ|ZZ|GHZ⟩ = +1.000000`
-- Interpretation:
-  - |00⟩ has ZZ = +1 (both qubits in |0⟩)
-  - |11⟩ has ZZ = +1 (both qubits in |1⟩)
-  - GHZ = (|00⟩ + |11⟩)/√2, so ⟨ZZ⟩ = +1
-  - This measures perfect correlation!
-
-**Noisy Measurement Process:**
-
-1. Prepare GHZ state with noise after each gate:
-   ```
-   |0⟩ ────[H]───[Noise]───*───[Noise]─── |GHZ⟩
-   |0⟩ ───────────────────[X]───[Noise]─── |GHZ⟩
-   ```
-2. Apply 5% depolarizing noise after each gate (H, CNOT)
-3. Measure in Z-basis (no rotation needed for ZZ)
-4. Execute 500 shots, collect bitstring statistics
-5. Compute expectation from outcomes
-
-**Expectation Value Calculation:**
-
-```
-E = (counts[00] + counts[11] - counts[01] - counts[10]) / total_shots
+```bash
+python -m Documentation.report_frobenius_stats \
+  --ibm-runs /path/to/results-1000-ibm_boston \
+  --qh2-runs /path/to/results-1000-quantinuum_h2 \
+  --bootstrap 2000
 ```
 
-- For ideal GHZ, expect mostly |00⟩ and |11⟩
-- Noise causes some |01⟩ and |10⟩ (decoherence/entanglement loss)
+If only mean-profile JSON files are available, the same script reports distance values (without bootstrap SE):
 
-**Fingerprint Computation:**
-
+```bash
+python -m Documentation.report_frobenius_stats
 ```
-F[8, 8] = E_noisy - E_ideal
-```
-
-Since E_ideal = +1, the fingerprint shows how much noise reduces the perfect correlation.
-
-**Actual Values from Experiment:**
-
-- **Qiskit fingerprint:** F[8,8] = -0.036000
-- **Cirq fingerprint:** F[8,8] = -0.140000
-- **Cross-platform difference:** 0.104000
-
-**Physical Interpretation:**
-
-- Ideal correlation: +1.0 (perfect entanglement)
-- Qiskit: E_noisy ≈ 0.964 (noise reduces correlation by ~3.6%)
-- Cirq: E_noisy ≈ 0.860 (noise reduces correlation by ~14.0%)
-- The fingerprint is negative because noise degrades entanglement
-- The larger magnitude for Cirq suggests different noise implementation or modeling
-
-
-This entry captures how depolarizing noise affects entangled states when measuring correlation, which is crucial for quantum algorithms that rely on entanglement.
-
-
-## Experimental Results (summary)
-
-The full numerical results are stored in the timestamped JSON files in `results/` (for example `results/simshadow_results_20251215_181631.json`). Below we summarise the most recent run.
-
-### Cross-platform distances (Frobenius norm)
-
-For fingerprints $F^{(A)}$ and $F^{(B)}$ from Qiskit and Cirq, we use the Frobenius distance $\lVert F^{(A)} - F^{(B)} \rVert_F$. For the three tested noise types:
-
-| Noise Type        | Frobenius Distance (Qiskit vs Cirq) |
-|-------------------|--------------------------------------|
-| Depolarising      | 7.18                                 |
-| Amplitude damping | 6.67                                 |
-| Phase damping     | 7.33                                 |
-
-These distances are roughly an order of magnitude larger than the expected contribution from statistical noise alone (≈0.74 in Frobenius norm for 135 measurements with 500 shots each), indicating systematic implementation differences between the two simulators even under identical nominal parameters.
-
-### Performance benchmarks (real circuit execution)
-
-Using 810 measurements (9 states × 15 observables × 3 noise types × 2 platforms) with 500 shots each:
-
-| Platform               | Total time (s) | Shots/sec  |
-|------------------------|----------------|-----------:|
-| Qiskit AerSimulator    | 77.0           |   2,629    |
-| Cirq DensityMatrixSimulator | 1.57      | 129,319    |
-
-This corresponds to a ~49× speedup for Cirq over Qiskit for this noisy validation workload.
-
-### Noise identification accuracy
-
-From quantum measurements and the current **physics‑informed rules**:
-
-| Noise Channel     | Qiskit | Cirq  | Combined |
-|-------------------|--------|-------|----------|
-| Depolarising      | 0.0%   | 0.0%  | 0.0%     |
-| Amplitude damping | 84.0%  | 83.5% | 83.8%    |
-| Phase damping     | 63.3%  | 62.8% | 63.1%    |
-| **Overall average** | **49.1%** | **48.8%** | **49.0%** |
-
-These results reflect both strengths and limitations of the current heuristic classifier:
-
-- Phase damping is reliably identified on both platforms, and amplitude damping is correctly identified on Qiskit, showing that the fingerprints contain informative structure.
-- Depolarising noise is not predicted by the current rules in our test grid (0.05, 0.10, 0.08), hence the 0.0% entries. This exposes a limitation of the simple thresholds rather than a property of the fingerprints themselves.
-- The thresholds and calibration constants are tuned for this specific experiment; applying them to different parameter ranges or additional noise types would require re‑calibration or a more sophisticated learning‑based classifier.
