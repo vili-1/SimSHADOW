@@ -334,6 +334,58 @@ This will:
 - Run physics-informed noise channel classification and parameter estimation
 - Save timestamped results to `results/simshadow_results_*.json` and detailed logs to `logs/`
 
+The New Idea/Vision Paper results repeated the steps above 1000 times to gain statistical confidence, as detailed here [Evaluation_NIER/README.md](Evaluation_NIER/README.md). We add here the parts relevant to EQ1 and EQ2.
+
+***5.1 EQ1 run_simshadow.py over many repeats***
+
+#### Execute
+From the root of the project run:
+```
+./Evaluation_NIER/scripts_RQ1/generate_n_fingerprints.sh <ROOT-FOLDER-OF-THIS-PROJECT> <REAPEATS>
+```
+For example:
+```
+nohup ./Evaluation_NIER/scripts_RQ1/generate_n_fingerprints.sh /users/kevenmen/SimSHADOW_artifact-main 1000 > all_16012026.log 2>&1 &
+```
+
+#### HeatMaps
+From a machine with a GUI, run:
+```
+python3 Evaluation_NIER/scripts_RQ1/generated_heatmap_presentaion.py
+```
+We used this script for quick debugging and visualisation of the results. You will need to edit the path in the script. 
+**See Section 6 for the full automation for generating the paper's official figures.**
+
+***5.2 EQ2 Testing Aspects of SimShadow***
+#### Get and Fix the Benchmarking
+Download a subset of benchmarks from its scalable benchmarks: [MQT Bench](https://www.cda.cit.tum.de/mqtbench/).
+
+Then use this zip to fix the syntax to work with Cirq:
+```
+./Evaluation_NIER/scripts_RQ2/openNfix_bench.sh <zip-file-from-mqtbench.zip>
+```
+Copy the results (unzip fixed QASM files) into 'MQTBench/' folder and run:
+```
+python3 Evaluation_NIER/scripts_RQ2/RQ2-in-wild.py
+```
+
+We utilised these MQTBench benchmarks with qubits 5-11:
+```
+ghz_indep_tket_*.qasm        
+grover-noancilla_indep_tket_*.qasm  
+qftentangled_indep_tket_*.qasm  
+random_indep_tket_*.qasm        
+su2random_indep_tket_*.qasm
+graphstate_indep_tket_*.qasm  
+qaoa_indep_tket_*.qasm              
+qft_indep_tket_*.qasm          
+realamprandom_indep_tket_*.qasm  
+twolocalrandom_indep_tket_*.qasm
+```
+(except one of the 11 qubits, which was running for days.)
+
+#### Execute the Benchmarking
+
 **6. Generate figures from the latest results**
 
 Use the artifact plotting entrypoint:
