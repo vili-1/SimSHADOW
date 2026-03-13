@@ -194,7 +194,9 @@ def setup_logging(debug: bool):
             "qiskit.transpiler",
             "qiskit.compiler",
             "qiskit_aer",
-            "cirq"
+            "cirq",
+            "braket",
+            "pennylane"
         ]:
             logging.getLogger(noisy).setLevel(logging.WARNING)
     
