@@ -10,6 +10,7 @@ from typing import Dict, Optional
 import numpy as np
 
 from braket.circuits import Circuit
+from braket.devices import LocalSimulator
 from braket.circuits.serialization import IRType
 
 from simshadow.core.noise_models import NoiseChannel, DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel 
