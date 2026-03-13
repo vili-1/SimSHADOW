@@ -100,17 +100,17 @@ def save_all_outputs(experiment_data, log_file, output_file, timestamp, debug):
         f.write("* Updated figures: figures/figure2-5_*.pdf\n")
         f.write("* Updated table: results/table1_identification.txt\n")
     
-    # 3. Update Table 1 with latest results
+    # 3. Update Table 1 with the latest results
     table_content = f"""Table 1: Noise Channel Identification Accuracy (%)
 {'='*70}
 
 Noise Channel      | Theoretical | Qiskit | Cirq  | Overall
 -------------------|-------------|--------|-------|--------
-Depolarizing       |    85.0     |  0.0   |  0.0  |  0.0
-Amplitude Damping  |    80.0     | 84.0   | 83.5  | 83.8
-Phase Damping      |    65.0     | 63.3   | 62.8  | 63.1
+Depolarizing       |    00.0     | 00.0   | 00.0  | 00.0
+Amplitude Damping  |    00.0     | 00.0   | 00.0  | 00.0
+Phase Damping      |    00.0     | 00.0   | 00.0  | 00.0
 -------------------|-------------|--------|-------|--------
-Overall Average    |    76.7     | 49.1   | 48.8  | 49.0
+Overall Average    |    00.0     | 00.0   | 00.0  | 00.0
 
 Cross-Platform Analysis (Real Quantum Circuits):
 - Depolarizing Distance:    {experiment_data['cross_platform_distances']['depolarizing']:.4f}
@@ -422,7 +422,7 @@ def main():
         'timing': timing_data,
         'cross_platform_distances': cross_platform_distances,
         'identification_results': { # Not really working
-            'qiskit': {'depolarizing': 0.0, 'amplitude_damping': 0.0, 'phase_damping': 0.3, 'overall': 0.0},
+            'qiskit': {'depolarizing': 0.0, 'amplitude_damping': 0.0, 'phase_damping': 0.0, 'overall': 0.0},
             'cirq': {'depolarizing': 0.0, 'amplitude_damping': 0.0, 'phase_damping': 0.0, 'overall': 0.0},
             'combined': {'depolarizing': 0.0, 'amplitude_damping': 0.0, 'phase_damping': 0.0, 'overall': 0.0}
         },
