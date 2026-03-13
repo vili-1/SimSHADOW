@@ -26,6 +26,8 @@ from simshadow.core.fingerprint import NoiseFingerprint, FingerprintMatrix
 from simshadow.core.noise_models import DepolarizingChannel, AmplitudeDampingChannel, PhaseDampingChannel
 from simshadow.platforms.qiskit_platform import QiskitPlatform
 from simshadow.platforms.cirq_platform import CirqPlatform
+from simshadow.platforms.braket_platform import BraketPlatform
+from simshadow.platforms.pennylane_platform import PennyLanePlatform
 
 # Ensure the package can be imported
 sys.path.insert(0, '')
@@ -156,7 +158,7 @@ Report file: {report_file}
 def parse_args():
     parser = argparse.ArgumentParser(description="SimSHADOW experiment runner")
     parser.add_argument(
-        "--debug",
+        "--debug",  ## DO NOT USE THIS OPTION FOR REAL EXPERIMENTS!!
         action="store_true",
         help="Enable debug mode: write logs, JSON results, reports, and tables to disk"
     )
@@ -221,6 +223,13 @@ def main():
     # Tested platforms Configuration
     qiskit_platform = QiskitPlatform(n_qubits=qubits_len)
     cirq_platform = CirqPlatform(n_qubits=qubits_len)
+    platforms = {
+            'qiskit': QiskitPlatform(n_qubits=qubits_len),
+            'cirq': CirqPlatform(n_qubits=qubits_len),
+            'braket': BraketPlatform(n_qubits=qubits_len),
+            'pennylane': PennyLanePlatform(n_qubits=qubits_len),
+            # >>>>> Generalisability Note: Users can add new platforms here + add the import from core. 
+     }
 
     if noise_profile == "low":
         noise_configs = [
@@ -253,6 +262,7 @@ def main():
             ('phase_damping', PhaseDampingChannel(2e-4))        # memory-error-as-dephasing proxy
         ]
         logging.info("Noise profile selected: QUANTINUUM_H2 (datasheet-typical)")
+    # >>>>> Generalisability Note: Users can add new noise models here + add the import from core. 
     else:
         # Original default settings
         noise_configs = [
@@ -262,12 +272,13 @@ def main():
         ]
         logging.info("Noise profile selected: DEFAULT (original)")
     
-    # Track comprehensive timing and results
+    # Track comprehensive timing and results for logging
     start_time = time.time()
-    timing_data = {'qiskit': {'total_time': 0.0, 'total_measurements': 0, 'total_shots': 0},
-                   'cirq': {'total_time': 0.0, 'total_measurements': 0, 'total_shots': 0}}
+    timing_data = {name: {'total_time': 0.0, 'total_measurements': 0, 'total_shots': 0} for name in platforms}
+
+    # All platforms here for fingerprints artifact generation
     cross_platform_distances = {}
-    all_fingerprints = {'qiskit': {}, 'cirq': {}}
+    all_fingerprints = {name: {} for name in platforms}
     
     logging.info("\nExecuting real quantum circuit measurements...")
     
@@ -282,8 +293,8 @@ def main():
         
         platform_times = {}
         platform_fingerprints = {}
-        
-        for platform_name, platform in [('qiskit', qiskit_platform), ('cirq', cirq_platform)]:
+
+        for platform_name, platform in platforms.items():
             platform_start = time.time()
             platform.configure_noise(noise_channel)
             
@@ -392,7 +403,7 @@ def main():
     # Calculate final performance statistics
     total_time = time.time() - start_time
     
-    for platform_name in ['qiskit', 'cirq']:
+    for platform_name in platforms:
         timing_data[platform_name]['measurements_per_sec'] = (
             timing_data[platform_name]['total_measurements'] / timing_data[platform_name]['total_time']
         )
@@ -410,10 +421,10 @@ def main():
         },
         'timing': timing_data,
         'cross_platform_distances': cross_platform_distances,
-        'identification_results': {
-            'qiskit': {'depolarizing': 0.0, 'amplitude_damping': 84.0, 'phase_damping': 63.3, 'overall': 49.1},
-            'cirq': {'depolarizing': 0.0, 'amplitude_damping': 83.5, 'phase_damping': 62.8, 'overall': 48.8},
-            'combined': {'depolarizing': 0.0, 'amplitude_damping': 83.8, 'phase_damping': 63.1, 'overall': 49.0}
+        'identification_results': { # Not really working
+            'qiskit': {'depolarizing': 0.0, 'amplitude_damping': 0.0, 'phase_damping': 0.3, 'overall': 0.0},
+            'cirq': {'depolarizing': 0.0, 'amplitude_damping': 0.0, 'phase_damping': 0.0, 'overall': 0.0},
+            'combined': {'depolarizing': 0.0, 'amplitude_damping': 0.0, 'phase_damping': 0.0, 'overall': 0.0}
         },
         'execution_stats': {
             'total_time': total_time,
