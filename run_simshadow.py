@@ -295,6 +295,7 @@ def main():
         
         platform_times = {}
         platform_fingerprints = {}
+        platforms_ended = [] # We build a cross_platform_distances for all combinations so we need what finished
 
         for platform_name, platform in platforms.items():
             platform_start = time.time()
