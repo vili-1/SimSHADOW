@@ -1,0 +1,28 @@
+{
+  "default": {
+    "depolarizing": { "parameter": 0.1 },
+    "amplitude_damping": { "parameter": 0.1 },
+    "phase_damping": { "parameter": 0.08 }
+  },
+  "low": {
+    "depolarizing": { "parameter": 0.0005 },
+    "amplitude_damping": { "parameter": 0.0001 },
+    "phase_damping": { "parameter": 0.0002 }
+  },
+  "high": {
+    "depolarizing": { "parameter": 0.005 },
+    "amplitude_damping": { "parameter": 0.002 },
+    "phase_damping": { "parameter": 0.005 }
+  },
+  "ibm_boston": {
+    "depolarizing": { "parameter": 0.0002824 },
+    "amplitude_damping": { "parameter": 0.000198 },
+    "phase_damping": { "parameter": 0.000154 }
+  },
+  "quantinuum_h2": {
+    "depolarizing": { "parameter": 0.00006 },
+    "amplitude_damping": { "parameter": 0.00001 },
+    "phase_damping": { "parameter": 0.0002 }
+  }
+}
+

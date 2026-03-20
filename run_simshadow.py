@@ -222,45 +222,40 @@ def main():
     qiskit_platform = QiskitPlatform(n_qubits=qubits_len)
     cirq_platform = CirqPlatform(n_qubits=qubits_len)
 
-    if noise_profile == "low":
-        noise_configs = [
-            ('depolarizing', DepolarizingChannel(5e-4)),
-            ('amplitude_damping', AmplitudeDampingChannel(1e-4)),
-            ('phase_damping', PhaseDampingChannel(2e-4))
-        ]
-        logging.info("Noise profile selected: LOW")
-    elif noise_profile == "high":
-        noise_configs = [
-            ('depolarizing', DepolarizingChannel(5e-3)),
-            ('amplitude_damping', AmplitudeDampingChannel(2e-3)),
-            ('phase_damping', PhaseDampingChannel(5e-3))
-        ]
-        logging.info("Noise profile selected: HIGH")  
-    elif noise_profile == "ibm_boston":
-        # IBM Boston 1Q-mapped values (SX error + T1/T2 mapped per ~50ns step)
-        noise_configs = [
-            ('depolarizing', DepolarizingChannel(2.824e-4)),
-            ('amplitude_damping', AmplitudeDampingChannel(1.98e-4)),
-            ('phase_damping', PhaseDampingChannel(1.54e-4))
-        ]
-        logging.info("Noise profile selected: IBM_BOSTON (1Q mapped)")
-    elif noise_profile == "quantinuum_h2":
-        # Quantinuum H2 (typical) from product data sheet
-        # 1Q gate infidelity ~3e-5, memory error depth-1 ~2e-4
-        noise_configs = [
-            ('depolarizing', DepolarizingChannel(6e-5)),        # ~2 * (1Q infidelity) proxy
-            ('amplitude_damping', AmplitudeDampingChannel(1e-5)), # small; trapped-ion relaxation not usually dominant
-            ('phase_damping', PhaseDampingChannel(2e-4))        # memory-error-as-dephasing proxy
-        ]
-        logging.info("Noise profile selected: QUANTINUUM_H2 (datasheet-typical)")
-    else:
-        # Original default settings
-        noise_configs = [
-            ('depolarizing', DepolarizingChannel(0.1)),
-            ('amplitude_damping', AmplitudeDampingChannel(0.1)),
-            ('phase_damping', PhaseDampingChannel(0.08))
-        ]
-        logging.info("Noise profile selected: DEFAULT (original)")
+    # Load noise parameters from a data-driven config file.
+    # This keeps the exact numeric values identical to the previous implementation,
+    # but moves the parameters out of the code to improve maintainability.
+    noise_profiles_path = (
+        Path(__file__).resolve().parent / "Documentation" / "noise_profiles.json"
+    )
+    with open(noise_profiles_path, "r", encoding="utf-8") as f:
+        noise_profiles = json.load(f)
+
+    if noise_profile not in noise_profiles:
+        raise ValueError(f"Unknown noise profile: {noise_profile}")
+
+    profile_cfg = noise_profiles[noise_profile]
+    noise_order = ("depolarizing", "amplitude_damping", "phase_damping")
+    noise_profiles_messages = {
+        "low": "Noise profile selected: LOW",
+        "high": "Noise profile selected: HIGH",
+        "ibm_boston": "Noise profile selected: IBM_BOSTON (1Q mapped)",
+        "quantinuum_h2": "Noise profile selected: QUANTINUUM_H2 (datasheet-typical)",
+        "default": "Noise profile selected: DEFAULT (original)",
+    }
+    logging.info(noise_profiles_messages.get(noise_profile, f"Noise profile selected: {noise_profile}"))
+
+    noise_configs = []
+    for nk in noise_order:
+        param = float(profile_cfg[nk]["parameter"])
+        if nk == "depolarizing":
+            noise_configs.append((nk, DepolarizingChannel(param)))
+        elif nk == "amplitude_damping":
+            noise_configs.append((nk, AmplitudeDampingChannel(param)))
+        elif nk == "phase_damping":
+            noise_configs.append((nk, PhaseDampingChannel(param)))
+        else:
+            raise ValueError(f"Unsupported noise key: {nk}")
     
     # Track comprehensive timing and results
     start_time = time.time()
