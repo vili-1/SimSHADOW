@@ -2,6 +2,46 @@
 
 SimSHADOW provides systematic validation of quantum simulators through a lightweight, shadow-inspired fingerprinting protocol, enabling efficient cross-platform comparison and noise characterisation without full state tomography.
 
+**ICST 2026, Short Papers, Vision and Emerging Results:** Bensoussan, A., Chachkarova, E., Even-Mendoza, K., Fortz, S., Klimis, V., & Mousavi, M. (in press). Toward
+Live Noise Fingerprinting for Discrepancy Analysis in Quantum Software Engineering. In 19th IEEE International
+Conference on Software Testing, Verification and Validation (ICST) 2026, Daejeon, Republic of Korea
+```
+@inbook{4a8dd8fae115401383f8834a2f67fe22,
+title = "Toward Live Noise Fingerprinting for Discrepancy Analysis in Quantum Software Engineering",
+abstract = "Contemporary quantum computers are inherently noisy, posing significant challenges for the development and testing of quantum software. Simplified or outdated noise assumptions can lead to incorrect assessments of program correctness, obscure debugging, and hinder cross-platform portability, creating a critical quantum software development gap. Providing accurate, practical noise characterisation is challenging as traditional reconstruction methods scale exponentially and rapidly become outdated. In this vision paper, we address this gap via a novel classical shadow tomography-based pipeline, SIMSHADOW, enabling efficient, continuously updatable noise fingerprinting from empirical observations, suitable for integration into quantum software development workflows, including testing and validation. We prototyped the pipeline to investigate fingerprints{\textquoteright} ability to capture structured, interpretable noise and cross-platform discrepancies affecting quantum programs{\textquoteright} behaviour to support realistic testing and debugging in future tools. Our evaluation with Qiskit and Cirq under widely used hardware-informed profiles, IBM Boston and Quantinuum H2, shows fingerprints exhibit channel-specific structure and yield interpretable heatmaps. We observed systematic cross-platform discrepancies under matched noise configurations, quantified by large Frobenius distances at a fraction of full tomography cost. On 69 MQTBENCH programs, larger fingerprint differences correlate with output distributions divergences, highlighting threats for testing and cross-platform debugging tasks.",
+keywords = "Quantum, QSE, Noise Models, Cross-Platform Validation",
+author = "Avner Bensoussan and Elena Chachkarova and Karine Even-Mendoza and Sophie Fortz and Vasileios Klimis and Mohammadreza Mousavi",
+note = "Authors are listed in alphabetical order.",
+year = "2026",
+month = mar,
+day = "16",
+language = "English",
+booktitle = "19th IEEE International Conference on Software Testing, Verification and Validation (ICST) 2026, Daejeon, Republic of Korea",
+}
+```
+
+**Zenodo Recrord:** Bensoussan, A., CHACHKAROVA, E., Even-Mendoza, K., Fortz, S., Klimis, V., & Mousavi, M. R. (2026). Artifact of the paper: Noise Fingerprints for Cross-Platform Quantum Simulator Discrepancy Analysis (ICST-SVE-2026-V1). Zenodo. https://doi.org/10.5281/zenodo.18551509
+```
+@misc{bensoussan_2026_18551509,
+  author       = {Bensoussan, Avner and
+                  CHACHKAROVA, ELENA and
+                  Even-Mendoza, Karine and
+                  Fortz, Sophie and
+                  Klimis, Vasileios and
+                  Mousavi, Mohammad Reza},
+  title        = {Artifact of the paper: Noise Fingerprints for
+                   Cross-Platform Quantum Simulator Discrepancy
+                   Analysis
+                  },
+  month        = feb,
+  year         = 2026,
+  publisher    = {Zenodo},
+  version      = {ICST-SVE-2026-V1},
+  doi          = {10.5281/zenodo.18551509},
+  url          = {https://doi.org/10.5281/zenodo.18551509},
+}
+
+```
 
 ## Artifact & Reproducibility
 
