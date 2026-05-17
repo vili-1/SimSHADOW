@@ -4,7 +4,7 @@ SimSHADOW provides systematic validation of quantum simulators through a lightwe
 
 **ICST 2026, Short Papers, Vision and Emerging Results:** Bensoussan, A., Chachkarova, E., Even-Mendoza, K., Fortz, S., Klimis, V., & Mousavi, M. (in press). Toward
 Live Noise Fingerprinting for Discrepancy Analysis in Quantum Software Engineering. In 19th IEEE International
-Conference on Software Testing, Verification and Validation (ICST) 2026, Daejeon, Republic of Korea
+Conference on Software Testing, Verification and Validation (ICST) 2026, Daejeon, Republic of Korea. Authrs are alphabetically listed.
 ```
 @inbook{4a8dd8fae115401383f8834a2f67fe22,
 title = "Toward Live Noise Fingerprinting for Discrepancy Analysis in Quantum Software Engineering",
@@ -20,7 +20,7 @@ booktitle = "19th IEEE International Conference on Software Testing, Verificatio
 }
 ```
 
-**Zenodo Recrord:** Bensoussan, A., CHACHKAROVA, E., Even-Mendoza, K., Fortz, S., Klimis, V., & Mousavi, M. R. (2026). Artifact of the paper: Noise Fingerprints for Cross-Platform Quantum Simulator Discrepancy Analysis (ICST-SVE-2026-V1). Zenodo. https://doi.org/10.5281/zenodo.18551509
+**Zenodo Recrord:** Bensoussan, A., CHACHKAROVA, E., Even-Mendoza, K., Fortz, S., Klimis, V., & Mousavi, M. R. (2026). Artifact of the paper: Noise Fingerprints for Cross-Platform Quantum Simulator Discrepancy Analysis (ICST-SVE-2026-V1). Zenodo. https://doi.org/10.5281/zenodo.18551509. Authrs are alphabetically listed.
 ```
 @misc{bensoussan_2026_18551509,
   author       = {Bensoussan, Avner and
